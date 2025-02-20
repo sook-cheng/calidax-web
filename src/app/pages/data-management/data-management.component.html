@@ -1,0 +1,25 @@
+<div>
+    <div class="row p-3">
+        <div class="col-5">
+            <h4>Upload a file from you computer</h4>
+            <div>
+                <input type="file" id="fileInput" (change)="onFileSelected($event)" #fileInput>
+            </div>
+            <div>
+                <button class="btn-upload"><i class="fa-solid fa-up-long"></i>Upload selected file</button>
+                <span *ngIf="selectedFile"> or</span>
+                <span class="cancel-text" *ngIf="selectedFile" (click)="clearFile(fileInput)">Cancel</span>
+            </div>
+            <div class="uploadFile-span">
+                <span>The file will be uploaded to http://docs.aptuitiv.com/docs/</span>
+            </div>
+        </div>
+        <div class="col" style="padding-top: 0.5rem;">
+            <span>OR</span>
+        </div>
+        <div class="col-5">
+            <h4>Browse the server</h4>
+            <button class="btn-upload"><i class="fa-solid fa-link"></i>Browse the server</button>
+        </div>
+    </div>
+</div>

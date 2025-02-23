@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AppModule } from '../../app.module';
 import { AuthService } from '../../service/auth.service';
 import { FormsModule } from '@angular/forms';
-
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-auth',
@@ -16,6 +16,7 @@ export class AuthComponent {
 
   constructor(
     private authService: AuthService,
+    private router: Router
   ) { }
 
   onLogin() {
@@ -26,9 +27,7 @@ export class AuthComponent {
 
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
-        console.log('Login successful', response);
-        alert(response.message);
-        localStorage.setItem('token', response.token);
+        this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         console.error('Login failed', err);

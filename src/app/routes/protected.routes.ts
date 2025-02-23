@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
 import { ProtectedLayoutComponent } from '../layout/protected-layout/protected-layout.component';
 import {
-  DashboardComponent
+  DashboardComponent,
+  ReportsComponent,
+  DataManagementComponent
 } from '../pages';
-import { DataManagementComponent } from '../pages/data-management/data-management.component';
 
 export const PROTECTED_ROUTES: Routes = [
   {
@@ -12,6 +13,7 @@ export const PROTECTED_ROUTES: Routes = [
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
+      { path: 'reports', component: ReportsComponent },
       { path: 'dataManagement', component: DataManagementComponent },
     ],
   },

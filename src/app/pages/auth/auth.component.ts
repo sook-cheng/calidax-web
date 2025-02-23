@@ -1,15 +1,40 @@
 import { Component } from '@angular/core';
 import { AppModule } from '../../app.module';
+import { AuthService } from '../../service/auth.service';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
     selector: 'app-auth',
-    imports: [AppModule],
+    imports: [AppModule, FormsModule],
     templateUrl: './auth.component.html',
     styleUrl: './auth.component.less'
 })
 export class AuthComponent {
+  email: string = '';
+  password: string = '';
 
-  constructor() { }
+  constructor(
+    private authService: AuthService,
+  ) { }
 
-  async login() {}
+  onLogin() {
+    if (!this.email || !this.password) {
+      alert('Please enter email and password');
+      return;
+    }
+
+    this.authService.login(this.email, this.password).subscribe({
+      next: (response) => {
+        console.log('Login successful', response);
+        alert(response.message);
+        localStorage.setItem('token', response.token);
+      },
+      error: (err) => {
+        console.error('Login failed', err);
+        alert(err.error?.message || 'Login failed');
+      }
+    });
+  }
+
 }

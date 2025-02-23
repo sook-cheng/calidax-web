@@ -3,8 +3,8 @@ import { ProtectedLayoutComponent } from '../layout/protected-layout/protected-l
 import {
   DashboardComponent,
   ReportsComponent,
+  DataManagementComponent
 } from '../pages';
-import { DataManagementComponent } from '../pages/data-management/data-management.component';
 
 export const PROTECTED_ROUTES: Routes = [
   {

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AppModule } from '../../app.module';
-import { AuthService } from '../../service/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -27,6 +27,7 @@ export class AuthComponent {
 
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
+        localStorage.setItem('id', response.id);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {

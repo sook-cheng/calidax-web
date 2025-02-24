@@ -6,6 +6,7 @@ import {
   DataManagementComponent,
   CampaignsComponent
 } from '../pages';
+import { NewCampaignComponent } from '../pages/campaigns/new-campaigns/new-campaign.component';
 
 export const PROTECTED_ROUTES: Routes = [
   {
@@ -17,6 +18,7 @@ export const PROTECTED_ROUTES: Routes = [
       { path: 'reports', component: ReportsComponent },
       { path: 'dataManagement', component: DataManagementComponent },
       { path: 'campaigns', component: CampaignsComponent },
+      { path: 'campaigns/new-campaign', component: NewCampaignComponent},
     ],
   },
 ];

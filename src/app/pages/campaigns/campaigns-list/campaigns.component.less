@@ -1,6 +1,75 @@
 @import "primeicons/primeicons.css";
 
-::ng-deep p-table th, 
-::ng-deep p-table td {
-  border-bottom: none !important;
+::ng-deep .p-datatable-table {
+  border: 1px solid #e2e8f0;
+}
+
+::ng-deep .p-select {
+  margin-left: 2rem;
+}
+
+::ng-deep .p-datatable-thead > tr > th.p-datatable-column-sorted
+{
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+::ng-deep .p-datatable-thead > tr > th.p-datatable-column-sorted :focus,
+::ng-deep .p-datatable-thead > tr > th.p-datatable-column-sorted :hover
+{
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+.subCampaignCheckbox {
+  bottom: 3px;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.campaignCheckbox {
+  bottom: 10px;
+  position: relative;
+}
+
+.searchInput {
+  justify-content: end;
+  display: flex;
+  margin-right: 3rem;
+}
+
+.btn_newCampaign {
+  background-color: #0072bc;
+  font-weight: bold;
+  color: white;
+  margin-right: 2rem;
+  border-radius: 5px;
+  border: none;
+  padding: 5px 20px;
+
+  &:hover {
+    background-color: #005e9a;
+  }
+}
+
+.pi-ellipsis-v {
+  cursor: pointer;
+}
+
+::ng-deep th:nth-child(n+5):nth-child(-n+11) {
+  position: relative;
+}
+
+::ng-deep th:nth-child(n+5):nth-child(-n+11)::after {
+  content: "";
+  position: absolute;
+  top: 25%;   /* Space from the top */
+  bottom: 25%; /* Space from the bottom */
+  right: 0;
+  width: 1px;
+  background-color: #e2e8f0; /* Line color */
+}
+
+::ng-deep th:nth-child(11)::after {
+  content: none;
 }

@@ -1,10 +1,29 @@
 <div class="app-layout">
-  <div class="inner-content">
-    <div>
-      <!-- Logo -->
-      <app-nav-bar></app-nav-bar>
-      <!-- Settings -->
+  <div class="d-flex justify-content-between mt-4 mx-3">
+    <!-- Logo -->
+    <div style="width: 260px;"><img src="favicon.ico" /></div>
+    <app-nav-bar></app-nav-bar>
+    <div class="d-flex align-items-center pb-2">
+      <div ngbDropdown class="d-inline-block">
+        <button type="button" class="btn feedback-btn" id="feedbackDropdown" ngbDropdownToggle>
+          Feedback
+        </button>
+      </div>
+      <span style="font-size: 32px; padding-left: 0.75rem; color: #ececec;">|</span>
+      <div ngbDropdown class="d-inline-block">
+        <button type="button" class="btn icon-btn" id="settingsDropdown" ngbDropdownToggle>
+          <ng-icon name="bootstrapGear" class="icon"></ng-icon>
+        </button>
+        <div ngbDropdownMenu aria-labelledby="settingsDropdown">
+          <button ngbDropdownItem>Logout</button>
+        </div>
+      </div>
+      <button type="button" class="btn icon-btn">
+        <ng-icon name="bootstrapQuestionCircle" class="icon"></ng-icon>
+      </button>
     </div>
+  </div>
+  <div class="inner-content">
     <router-outlet></router-outlet>
   </div>
 </div>

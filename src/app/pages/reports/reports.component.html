@@ -38,8 +38,8 @@
                     <div class="input-group">
                         <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate"
                             (input)="validateInput($event, 'FROM')" formControlName="fromDate" required />
-                        <button class="btn btn-outline-secondary" (click)="datepicker.toggle()" type="button"><ng-icon
-                                name="bootstrapCalendar3" class="icon"></ng-icon></button>
+                        <button class="btn btn-outline-secondary" (click)="datepicker.toggle()" type="button">
+                            <ng-icon name="bootstrapCalendar3" class="icon"></ng-icon></button>
 
                         <div *ngIf="startDate?.invalid && (startDate?.dirty || startDate?.touched)" class="alert alert-danger">
                             <div *ngIf="startDate?.hasError('required')">
@@ -53,8 +53,8 @@
                     <div class="input-group">
                         <input #dpToDate class="form-control" placeholder="yyyy-mm-dd" name="dpToDate"
                             (input)="validateInput($event, 'TO')" formControlName="toDate" required />
-                        <button class="btn btn-outline-secondary" (click)="datepicker.toggle()" type="button"><ng-icon
-                                name="bootstrapCalendar3" class="icon"></ng-icon></button>
+                        <button class="btn btn-outline-secondary" (click)="datepicker.toggle()" type="button">
+                            <ng-icon name="bootstrapCalendar3" class="icon"></ng-icon></button>
 
                         <div *ngIf="endDate?.invalid && (endDate?.dirty || endDate?.touched)" class="alert alert-danger">
                             <div *ngIf="endDate?.hasError('required')">

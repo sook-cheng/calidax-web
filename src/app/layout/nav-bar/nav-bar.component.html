@@ -1,15 +1,15 @@
 <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs justify-content-center">
     @for (route of routes; track $index) {
-        <li [ngbNavItem]="{{$index + 1}}" class="nav-item">
+        <li [ngbNavItem]="route.index" class="nav-item">
             <button ngbNavLink routerLink="{{ route.path }}">{{route.name}}</button>
             <ng-template ngbNavContent>{{route.template}}</ng-template>
         </li>
     }
 </ul>
 
-<div [ngbNavOutlet]="nav" class="mt-2"></div>
+<div [ngbNavOutlet]="nav"></div>
 
-<ng-template #campaignsTpl> Campaigns Pending. </ng-template>
+<ng-template #campaignsTpl><app-campaigns></app-campaigns></ng-template>
 <ng-template #reportsTpl><app-reports></app-reports></ng-template>
 <ng-template #dataManagementTpl><app-data-management></app-data-management></ng-template>
-<ng-template #eventsManagerTpl> Events Manager Pending. </ng-template>
+<ng-template #eventsManagerTpl><app-events-manager></app-events-manager></ng-template>

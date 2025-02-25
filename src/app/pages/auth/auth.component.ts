@@ -28,7 +28,7 @@ export class AuthComponent {
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
         localStorage.setItem('id', response.id);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/campaigns']);
       },
       error: (err) => {
         console.error('Login failed', err);

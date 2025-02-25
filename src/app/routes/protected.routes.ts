@@ -12,9 +12,9 @@ export const PROTECTED_ROUTES: Routes = [
     component: ProtectedLayoutComponent,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent },
+      { path: 'campaigns', component: DashboardComponent },
       { path: 'reports', component: ReportsComponent },
-      { path: 'dataManagement', component: DataManagementComponent },
+      { path: 'data-management', component: DataManagementComponent },
     ],
   },
 ];

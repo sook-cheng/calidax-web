@@ -6,7 +6,7 @@
                 <input type="file" id="fileInput" (change)="onFileSelected($event)" #fileInput>
             </div>
             <div>
-                <button class="btn-upload"><i class="fa-solid fa-up-long"></i>Upload selected file</button>
+                <button class="btn-upload" (click)="uploadCSV()" [disabled]="!selectedFile"><i class="fa-solid fa-up-long"></i>Upload selected file</button>
                 <span *ngIf="selectedFile"> or</span>
                 <span class="cancel-text" *ngIf="selectedFile" (click)="clearFile(fileInput)">Cancel</span>
             </div>

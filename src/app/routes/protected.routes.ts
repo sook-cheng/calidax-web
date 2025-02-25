@@ -5,7 +5,8 @@ import {
   DataManagementComponent,
   CampaignsComponent,
   NewCampaignComponent,
-  EventsManagerComponent
+  EventsManagerComponent,
+  ProfileComponent,
 } from '../pages';
 
 export const PROTECTED_ROUTES: Routes = [
@@ -18,7 +19,8 @@ export const PROTECTED_ROUTES: Routes = [
       { path: 'data-management', component: DataManagementComponent },
       { path: 'campaigns', component: CampaignsComponent },
       { path: 'campaigns/new-campaign', component: NewCampaignComponent },
-      { path: 'events-manager', component: EventsManagerComponent }
+      { path: 'events-manager', component: EventsManagerComponent },
+      { path: 'profile', component: ProfileComponent},
     ],
   },
 ];

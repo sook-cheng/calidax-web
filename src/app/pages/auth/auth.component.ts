@@ -31,7 +31,6 @@ export class AuthComponent {
         this.router.navigate(['/campaigns']);
       },
       error: (err) => {
-        console.error('Login failed', err);
         alert(err.error?.message || 'Login failed');
       }
     });

@@ -4,7 +4,8 @@ import {
   DashboardComponent,
   ReportsComponent,
   DataManagementComponent,
-  CampaignsComponent
+  CampaignsComponent,
+  ProfileComponent,
 } from '../pages';
 import { NewCampaignComponent } from '../pages/campaigns/new-campaigns/new-campaign.component';
 
@@ -19,6 +20,7 @@ export const PROTECTED_ROUTES: Routes = [
       { path: 'dataManagement', component: DataManagementComponent },
       { path: 'campaigns', component: CampaignsComponent },
       { path: 'campaigns/new-campaign', component: NewCampaignComponent},
+      { path: 'profile', component: ProfileComponent},
     ],
   },
 ];

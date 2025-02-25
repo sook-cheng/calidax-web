@@ -1,4 +1,4 @@
-import { Component, inject, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
+import { Component, inject, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDatepickerModule, NgbHighlight, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppModule } from '../../app.module';
@@ -19,7 +19,7 @@ import { SuccessFailToastComponent } from '../shared';
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.less'
 })
-export class ReportsComponent {
+export class ReportsComponent implements OnInit {
   calendar = inject(NgbCalendar);
   formatter = inject(NgbDateParserFormatter);
   toastService = inject(SuccessFailToastService);
@@ -27,9 +27,11 @@ export class ReportsComponent {
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null = this.calendar.getToday();
   toDate: NgbDate | null = this.calendar.getNext(this.calendar.getToday(), 'd', 10);
-  clientOptions = ['Client 1', 'Client 2', 'Client 3'];
+  clientOptions = ['MDEC'];
   successMsgVisible = false;
   failMsgVisible = false;
+  isLoading = true;
+  isSubmitted = false;
 
   dateFilterForm: FormGroup = new FormGroup({
     client: new FormControl<string | null>(null, [Validators.required]),
@@ -48,6 +50,12 @@ export class ReportsComponent {
   constructor(public service: ReportService, private http: HttpClient) {
     this.reports$ = service.reports$;
     this.total$ = service.total$;
+  }
+
+  ngOnInit(): void {
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 1000);
   }
 
   get client() {
@@ -131,11 +139,17 @@ export class ReportsComponent {
   }
 
   onSubmit() {
-    const body = {
-      client: this.dateFilterForm.value.client,
-      startDate: this.dateFilterForm.value.fromDate + 'T16:00:00.000Z',
-      endDate: this.dateFilterForm.value.toDate + 'T23:59:59.999Z'
+    this.isSubmitted = true;
+    if (this.dateFilterForm.valid) {
+      const body = {
+        client: this.dateFilterForm.value.client,
+        startDate: this.dateFilterForm.value.fromDate + 'T16:00:00.000Z',
+        endDate: this.dateFilterForm.value.toDate + 'T23:59:59.999Z'
+      }
+
+      this.toastService.show({ template: this.successTpl, classname: 'bg-success text-light', header: 'Success' });
     }
+    
     // this.http.post<any>(`${environment.apiUrl}/filter-report`, body).subscribe(res => {
     //   if (res.status === 201) {
     //     const body = res.body;
@@ -159,6 +173,6 @@ export class ReportsComponent {
     //   }
     // });
 
-    this.toastService.show({ template: this.successTpl, classname: 'bg-success text-light', header: 'Success' });
+    
   }
 }

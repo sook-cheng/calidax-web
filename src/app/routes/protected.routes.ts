@@ -3,8 +3,10 @@ import { ProtectedLayoutComponent } from '../layout/protected-layout/protected-l
 import {
   DashboardComponent,
   ReportsComponent,
-  DataManagementComponent
+  DataManagementComponent,
+  CampaignsComponent
 } from '../pages';
+import { NewCampaignComponent } from '../pages/campaigns/new-campaigns/new-campaign.component';
 
 export const PROTECTED_ROUTES: Routes = [
   {
@@ -15,6 +17,8 @@ export const PROTECTED_ROUTES: Routes = [
       { path: 'campaigns', component: DashboardComponent },
       { path: 'reports', component: ReportsComponent },
       { path: 'data-management', component: DataManagementComponent },
+      { path: 'campaigns', component: CampaignsComponent },
+      { path: 'campaigns/new-campaign', component: NewCampaignComponent},
     ],
   },
 ];

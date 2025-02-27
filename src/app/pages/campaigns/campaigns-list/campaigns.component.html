@@ -15,14 +15,14 @@
         <div class="col" class="searchInput col">
             <p-iconfield>
                 <p-inputicon styleClass="pi pi-search" />
-                <input type="text" pInputText placeholder="Search" />
+                <input type="text" pInputText placeholder="Search" [(ngModel)]="searchText" (input)="filterTable()"/>
             </p-iconfield>
         </div>
     </div>
-    <p-table #dt [value]="filteredData" [paginator]="true" [rows]="10" dataKey="id">
+    <p-table #dt [value]="filteredData" [paginator]="true" [rows]="10" dataKey="newField">
         <ng-template pTemplate="header">
             <tr>
-                <th></th>
+                <th style="min-width: 6rem;"></th>
                 <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
                 <th>CAMPAIGN NAME</th>
                 <th style="border-right: 1px solid #e2e8f0;"></th>
@@ -43,30 +43,52 @@
                         [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
                     <p-tableCheckbox [value]="campaign" class="campaignCheckbox" />
                 </td>
-                <td>{{ campaign.id }}</td>
-                <td>{{ campaign.investmentName }}</td>
-                <td style="border-right: 1px solid #e2e8f0;">
-                    <p-menu #menu [popup]="true" [model]="getMenuItems(campaign)" [appendTo]="'body'"></p-menu>
-                    <i class="pi pi-ellipsis-v" (click)="menu.toggle($event)"></i>
-                </td>
+                <td>{{ campaign.campaignId }}</td>
+                <td>{{ campaign.newField }} - {{campaign.campaignSubText}}</td>
+                <td style="border-right: 1px solid #e2e8f0;"></td>
                 <td>
                     <p-tag [value]="campaign.status" [severity]="getTagSeverity(campaign.status)"></p-tag>
                 </td>
-                <td></td>
-                <td>{{campaign.endDate}}</td>
+                <td>
+                    {{ campaign.earliestStartDate }} <br>
+                    {{ campaign.latestStartDate }}
+                </td>
+                <td>
+                    {{ campaign.earliestEndDate }} <br>
+                    {{ campaign.latestEndDate }}
+                </td>
+                <td>
+                    {{ campaign.sumSpent | number:'1.2-2' }} <br>
+                    <progress [value]="campaign.progressValue" max="100"></progress><br>
+                    {{ campaign.sumBudget | number:'1.2-2' }}
+                </td>
+                <td>{{ campaign.sumImpressions }}</td>
+                <td>{{ campaign.sumView }}</td>
+                <td>{{ campaign.sumReach | number:'1.2-2' }}</td>
+                <td>{{ campaign.sumClicks }}</td>
             </tr>
         </ng-template>
         <ng-template #expandedrow let-data>
-            <tr *ngFor="let campaign of data.campaigns">
+            <tr *ngFor="let sub of data.subCampaign">
                 <td></td>
                 <td><i class="pi pi-chevron-right"></i><p-tableCheckbox class="subCampaignCheckbox" /></td>
                 <td>
-                    {{ campaign.name }}
+                    {{ sub.subCampaign }} / {{sub.subCampaignSubText}}
                 </td>
                 <td style="border-right: 1px solid #e2e8f0;">
-                    <p-menu #menu [popup]="true" [model]="getMenuItems(campaign)" [appendTo]="'body'"></p-menu>
-                    <i class="pi pi-ellipsis-v" (click)="menu.toggle($event)"></i>
+                    <p-menu #menu [popup]="true" [model]="menuItems" [appendTo]="'body'"></p-menu>
+                    <i class="pi pi-ellipsis-v" (click)="onMenuClick($event, sub, menu)"></i>
                 </td>
+                <td>
+                    <p-tag [value]="sub.status" [severity]="getTagSeverity(sub.status)"></p-tag>
+                </td>
+                <td>{{ sub.startDate }}</td>
+                <td>{{ sub.endDate }}</td>
+                <td>{{ sub.budget | number:'1.2-2' }}</td>
+                <td>{{ sub.impressions }}</td>
+                <td>{{ sub.views }}</td>
+                <td>{{ sub.reach | number:'1.2-2' }}</td>
+                <td>{{ sub.clicks }}</td>
             </tr>
         </ng-template>
     </p-table>

@@ -11,11 +11,13 @@ import { TagModule } from 'primeng/tag';
 import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
 import { Router, RouterModule } from '@angular/router';
+import { CampaignsService } from '../../../services';
+import { Menu } from 'primeng/menu';
 
 @Component({
   selector: 'app-campaigns',
   imports: [AppModule, TableModule, DropdownModule, InputIconModule, IconFieldModule, FormsModule, InputTextModule, ButtonModule,
-    TagModule, MenuModule, RouterModule],
+    TagModule, MenuModule, RouterModule, Menu],
   templateUrl: './campaigns.component.html',
   styleUrl: './campaigns.component.less'
 })
@@ -23,9 +25,14 @@ export class CampaignsComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private service: CampaignsService,
   ) { }
 
+  menuItems: MenuItem[] = [];
+  selectedCampaign: any = null;
   selectedStatus: string | null = null; // Default to 'All' (null)
+  selectedObjective: string | null = null; 
+  searchText: string = ''; 
   filteredData: any[] = []; // Store filtered data
   statusOptions = [
     { label: 'Status', value: null }, // Show all if selected
@@ -40,43 +47,25 @@ export class CampaignsComponent implements OnInit {
     { label: 'Leads', value: 'leads' },
     { label: 'Traffic', value: 'traffic' }
   ];
-
-  data = [
-    {
-      id: 1,
-      investmentName: 'INVESTMENT THEMATIC',
-      status: '',
-      endDate: '2024-12-31',
-      campaigns: [
-        { name: 'Programmatic' },
-        { name: 'LinkedIn Ads' }
-      ]
-    },
-    {
-      id: 2,
-      investmentName: 'THEMATIC',
-      status: '',
-      endDate: '2025-12-31',
-      campaigns: [
-        { name: 'Meta' },
-        { name: 'LinkedIn Ads' }
-      ]
-    },
-    {
-      id: 3,
-      investmentName: 'MDEC DE RANTAU - LEADS',
-      status: 'Paused',
-      endDate: '2025-12-31',
-      campaigns: [
-        { name: 'Programmatic' },
-        { name: 'Meta' }
-      ]
-    },
-  ];
+  data: any[] = [];
 
   ngOnInit(): void {
-    this.checkCampaignStatuses();
-    this.filteredData = [...this.data]; // Initially, show all data
+    this.loadData();
+    this.menuItems = [
+      {
+        label: 'Pause',
+        icon: 'pi pi-pause',
+        command: (event) => this.pauseCampaign()
+      }
+    ];
+  }
+
+  loadData(): void {
+    this.service.getCSVData(null, null, null).subscribe(response => {
+      this.data = response.records;
+      this.filteredData = [...this.data]; // Default display
+      this.filteredData = response.records.flat();
+    });
   }
 
   checkCampaignStatuses() {
@@ -98,29 +87,39 @@ export class CampaignsComponent implements OnInit {
     switch (status) {
       case 'Active': return 'success';
       case 'Ended': return 'warn';
-      case 'Paused': return 'info'; // 'warning' is not valid, use 'warn'
-      default: return 'secondary'; // Use a valid fallback
+      case 'Paused': return 'info';
+      default: return 'secondary';
     }
   }
 
-  getMenuItems(campaign: any): MenuItem[] {
-    return [
-      { label: 'Pause', icon: 'pi pi-pause', command: () => this.pauseCampaign(campaign) }
-    ];
+  onMenuClick(event: any, campaign: any, menu: Menu) {
+    this.selectedCampaign = campaign;
+    menu.toggle(event);
   }
 
-  pauseCampaign(campaign: any) {
-    console.log(`Paused campaign: ${campaign.name}`);
-    // Implement pause logic here
+  pauseCampaign() {
+    const updateRequest = {
+      id: this.selectedCampaign.id,
+      recordId: this.selectedCampaign.recordId,
+      status: 'Paused'
+    };
+
+    this.service.updateCampaign(updateRequest).subscribe(
+      response => {
+        this.loadData();
+      },
+      error => {
+        alert(error?.message);
+      }
+    );
   }
 
-  // Function to filter table based on status selection
   filterTable(): void {
-    if (!this.selectedStatus) {
-      this.filteredData = [...this.data]; // Show all if "All" is selected
-    } else {
-      this.filteredData = this.data.filter(campaign => campaign.status === this.selectedStatus);
-    }
+    this.service.getCSVData(this.selectedStatus, this.selectedObjective, this.searchText ).subscribe(response => {
+      this.data = response.records;
+      this.filteredData = [...this.data];
+      this.filteredData = response.records.flat();
+    });
   }
 
   newCampaign() {

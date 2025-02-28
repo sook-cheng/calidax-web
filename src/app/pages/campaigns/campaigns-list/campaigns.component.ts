@@ -43,9 +43,9 @@ export class CampaignsComponent implements OnInit {
 
   campaignObjective = [
     { label: 'Campaign Objective', value: null }, // Show all if selected
-    { label: 'Branding', value: 'branding' },
-    { label: 'Leads', value: 'leads' },
-    { label: 'Traffic', value: 'traffic' }
+    { label: 'Branding', value: 'Branding' },
+    { label: 'Leads', value: 'Leads' },
+    { label: 'Traffic', value: 'Traffic' }
   ];
   data: any[] = [];
 

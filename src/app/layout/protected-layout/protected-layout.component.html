@@ -15,7 +15,8 @@
           <ng-icon name="bootstrapGear" class="icon"></ng-icon>
         </button>
         <div ngbDropdownMenu aria-labelledby="settingsDropdown">
-          <button ngbDropdownItem>Logout</button>
+          <button ngbDropdownItem (click)="logout()">Logout</button>
+          <button ngbDropdownItem (click)="profile()">Profile</button>
         </div>
       </div>
       <button type="button" class="btn d-flex" style="padding: 0.375rem 0.5rem 0.375rem 0;">

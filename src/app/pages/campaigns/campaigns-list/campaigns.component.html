@@ -1,98 +1,100 @@
-<div>
-    <div class="row p-3">
-        <div class="col-8">
-            <h4>Campaigns</h4>
+<div style="padding: 2rem;">
+    <div class="campaign-outline">
+        <div class="row title">
+            <div class="col-8">
+                <h4 class="m-0">Campaigns</h4>
+            </div>
+            <div class="col" style="text-align: end;">
+                <button class="btn_newCampaign" (click)="newCampaign()">New Campaign</button>
+            </div>
         </div>
-        <div class="col" style="text-align: end;">
-            <button class="btn_newCampaign" (click)="newCampaign()">New Campaign</button>
+        <div class="row dropdown-border">
+            <div class="col">
+                <p-dropdown [options]="statusOptions" placeholder="Status" [(ngModel)]="selectedStatus" (onChange)="filterTable()"></p-dropdown>
+                <p-dropdown [options]="campaignObjective" placeholder="Campaign Objective" [(ngModel)]="selectedObjective" (onChange)="filterTable()"></p-dropdown>
+            </div>
+            <div class="col" class="searchInput col">
+                <p-iconfield>
+                    <p-inputicon styleClass="pi pi-search" />
+                    <input type="text" pInputText placeholder="Search" [(ngModel)]="searchText" (input)="filterTable()"/>
+                </p-iconfield>
+            </div>
         </div>
+        <p-table #dt [value]="filteredData" [paginator]="true" [rows]="10" dataKey="newField">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="min-width: 6rem;"></th>
+                    <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
+                    <th>CAMPAIGN NAME</th>
+                    <th style="border-right: 1px solid #e2e8f0;"></th>
+                    <th style="text-align: center;">STATUS</th>
+                    <th style="text-align: center;">START DATE</th>
+                    <th style="text-align: center;">END DATE</th>
+                    <th style="text-align: center;">BUDGET DELIVERED</th>
+                    <th style="text-align: center;">IMPRESSIONS</th>
+                    <th style="text-align: center;">VIEWS</th>
+                    <th style="text-align: center;">REACH</th>
+                    <th style="text-align: center;">CLICKS</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-campaign let-expanded="expanded">
+                <tr>
+                    <td>
+                        <p-button type="button" pRipple [pRowToggler]="campaign" [text]="true" [rounded]="true"
+                            [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                        <p-tableCheckbox [value]="campaign" class="campaignCheckbox" />
+                    </td>
+                    <td>{{ campaign.campaignId }}</td>
+                    <td>{{ campaign.newField }} - {{campaign.campaignSubText}} <br>
+                        {{ campaign.campaignSubText}} | {{ campaign.client}}
+                    </td>
+                    <td style="border-right: 1px solid #e2e8f0;"></td>
+                    <td>
+                        <p-tag [value]="campaign.status" [severity]="getTagSeverity(campaign.status)"></p-tag>
+                    </td>
+                    <td>
+                        {{ campaign.earliestStartDate }} <br>
+                        {{ campaign.latestStartDate }}
+                    </td>
+                    <td>
+                        {{ campaign.earliestEndDate }} <br>
+                        {{ campaign.latestEndDate }}
+                    </td>
+                    <td>
+                        {{ campaign.sumSpent | number:'1.2-2' }} MYR <br>
+                        <progress [value]="campaign.progressValue" max="100"></progress><br>
+                        {{ campaign.sumBudget | number:'1.2-2' }} MYR
+                    </td>
+                    <td style="text-align: right;">{{ campaign.sumImpressions | number }}</td>
+                    <td style="text-align: right;">{{ campaign.sumView | number }}</td>
+                    <td style="text-align: right;">{{ campaign.sumReach | number:'1.2-2' }}</td>
+                    <td style="text-align: right;">{{ campaign.sumClicks | number }}</td>
+                </tr>
+            </ng-template>
+            <ng-template #expandedrow let-data>
+                <tr *ngFor="let sub of data.subCampaign">
+                    <td></td>
+                    <td><i class="pi pi-chevron-right"></i><p-tableCheckbox class="subCampaignCheckbox" /></td>
+                    <td>
+                        {{ sub.subCampaign }} / {{sub.subCampaignSubText}} <br>
+                        Order
+                    </td>
+                    <td style="border-right: 1px solid #e2e8f0;">
+                        <p-menu #menu [popup]="true" [model]="menuItems" [appendTo]="'body'"></p-menu>
+                        <i class="pi pi-ellipsis-v" (click)="onMenuClick($event, sub, menu)"></i>
+                    </td>
+                    <td>
+                        <p-tag [value]="sub.status" [severity]="getTagSeverity(sub.status)"></p-tag>
+                    </td>
+                    <td>{{ sub.startDate }}</td>
+                    <td>{{ sub.endDate }}</td>
+                    <td>{{ sub.budget | number:'1.2-2' }} MYR</td>
+                    <td style="text-align: right;">{{ sub.impressions | number }}</td>
+                    <td style="text-align: right;">{{ sub.views | number }}</td>
+                    <td style="text-align: right;">{{ sub.reach | number:'1.2-2' }}</td>
+                    <td style="text-align: right;">{{ sub.clicks | number }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
     </div>
-    <div class="row mb-3">
-        <div class="col">
-            <p-dropdown [options]="statusOptions" placeholder="Status" [(ngModel)]="selectedStatus" (onChange)="filterTable()"></p-dropdown>
-            <p-dropdown [options]="campaignObjective" placeholder="Campaign Objective" [(ngModel)]="selectedObjective" (onChange)="filterTable()"></p-dropdown>
-        </div>
-        <div class="col" class="searchInput col">
-            <p-iconfield>
-                <p-inputicon styleClass="pi pi-search" />
-                <input type="text" pInputText placeholder="Search" [(ngModel)]="searchText" (input)="filterTable()"/>
-            </p-iconfield>
-        </div>
-    </div>
-    <p-table #dt [value]="filteredData" [paginator]="true" [rows]="10" dataKey="newField">
-        <ng-template pTemplate="header">
-            <tr>
-                <th style="min-width: 6rem;"></th>
-                <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
-                <th>CAMPAIGN NAME</th>
-                <th style="border-right: 1px solid #e2e8f0;"></th>
-                <th>STATUS</th>
-                <th>START DATE</th>
-                <th>END DATE</th>
-                <th>BUDGET DELIVERED</th>
-                <th>IMPRESSIONS</th>
-                <th>VIEWS</th>
-                <th>REACH</th>
-                <th>CLICKS</th>
-            </tr>
-        </ng-template>
-        <ng-template #body let-campaign let-expanded="expanded">
-            <tr>
-                <td>
-                    <p-button type="button" pRipple [pRowToggler]="campaign" [text]="true" [rounded]="true"
-                        [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
-                    <p-tableCheckbox [value]="campaign" class="campaignCheckbox" />
-                </td>
-                <td>{{ campaign.campaignId }}</td>
-                <td>{{ campaign.newField }} - {{campaign.campaignSubText}} <br>
-                    {{ campaign.campaignSubText}} | {{ campaign.client}}
-                </td>
-                <td style="border-right: 1px solid #e2e8f0;"></td>
-                <td>
-                    <p-tag [value]="campaign.status" [severity]="getTagSeverity(campaign.status)"></p-tag>
-                </td>
-                <td>
-                    {{ campaign.earliestStartDate }} <br>
-                    {{ campaign.latestStartDate }}
-                </td>
-                <td>
-                    {{ campaign.earliestEndDate }} <br>
-                    {{ campaign.latestEndDate }}
-                </td>
-                <td>
-                    {{ campaign.sumSpent | number:'1.2-2' }} <br>
-                    <progress [value]="campaign.progressValue" max="100"></progress><br>
-                    {{ campaign.sumBudget | number:'1.2-2' }}
-                </td>
-                <td>{{ campaign.sumImpressions }}</td>
-                <td>{{ campaign.sumView }}</td>
-                <td>{{ campaign.sumReach | number:'1.2-2' }}</td>
-                <td>{{ campaign.sumClicks }}</td>
-            </tr>
-        </ng-template>
-        <ng-template #expandedrow let-data>
-            <tr *ngFor="let sub of data.subCampaign">
-                <td></td>
-                <td><i class="pi pi-chevron-right"></i><p-tableCheckbox class="subCampaignCheckbox" /></td>
-                <td>
-                    {{ sub.subCampaign }} / {{sub.subCampaignSubText}} <br>
-                    Order
-                </td>
-                <td style="border-right: 1px solid #e2e8f0;">
-                    <p-menu #menu [popup]="true" [model]="menuItems" [appendTo]="'body'"></p-menu>
-                    <i class="pi pi-ellipsis-v" (click)="onMenuClick($event, sub, menu)"></i>
-                </td>
-                <td>
-                    <p-tag [value]="sub.status" [severity]="getTagSeverity(sub.status)"></p-tag>
-                </td>
-                <td>{{ sub.startDate }}</td>
-                <td>{{ sub.endDate }}</td>
-                <td>{{ sub.budget | number:'1.2-2' }}</td>
-                <td>{{ sub.impressions }}</td>
-                <td>{{ sub.views }}</td>
-                <td>{{ sub.reach | number:'1.2-2' }}</td>
-                <td>{{ sub.clicks }}</td>
-            </tr>
-        </ng-template>
-    </p-table>
 </div>

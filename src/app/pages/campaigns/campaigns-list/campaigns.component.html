@@ -10,7 +10,7 @@
     <div class="row mb-3">
         <div class="col">
             <p-dropdown [options]="statusOptions" placeholder="Status" [(ngModel)]="selectedStatus" (onChange)="filterTable()"></p-dropdown>
-            <p-dropdown [options]="campaignObjective" placeholder="Campaign Objective"></p-dropdown>
+            <p-dropdown [options]="campaignObjective" placeholder="Campaign Objective" [(ngModel)]="selectedObjective" (onChange)="filterTable()"></p-dropdown>
         </div>
         <div class="col" class="searchInput col">
             <p-iconfield>
@@ -44,7 +44,9 @@
                     <p-tableCheckbox [value]="campaign" class="campaignCheckbox" />
                 </td>
                 <td>{{ campaign.campaignId }}</td>
-                <td>{{ campaign.newField }} - {{campaign.campaignSubText}}</td>
+                <td>{{ campaign.newField }} - {{campaign.campaignSubText}} <br>
+                    {{ campaign.campaignSubText}} | {{ campaign.client}}
+                </td>
                 <td style="border-right: 1px solid #e2e8f0;"></td>
                 <td>
                     <p-tag [value]="campaign.status" [severity]="getTagSeverity(campaign.status)"></p-tag>
@@ -73,7 +75,8 @@
                 <td></td>
                 <td><i class="pi pi-chevron-right"></i><p-tableCheckbox class="subCampaignCheckbox" /></td>
                 <td>
-                    {{ sub.subCampaign }} / {{sub.subCampaignSubText}}
+                    {{ sub.subCampaign }} / {{sub.subCampaignSubText}} <br>
+                    Order
                 </td>
                 <td style="border-right: 1px solid #e2e8f0;">
                     <p-menu #menu [popup]="true" [model]="menuItems" [appendTo]="'body'"></p-menu>

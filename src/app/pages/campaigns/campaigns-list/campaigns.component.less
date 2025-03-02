@@ -10,15 +10,13 @@
 
 ::ng-deep .p-select {
   margin-left: 2rem;
-  background-color: transparent !important;
-}
-
-::ng-deep .p-select-overlay {
-  background-color: transparent !important;
+  background: transparent !important;
+  border: 1px solid #c8c8c8 !important;
 }
 
 ::ng-deep .p-inputtext {
-  background-color: transparent !important;
+  background: transparent !important;
+  border: 1px solid #c8c8c8 !important;
 }
 
 ::ng-deep .p-button-icon-only {
@@ -26,7 +24,20 @@
 }
 
 ::ng-deep .p-checkbox-box {
-  background-color: transparent !important;
+  background: transparent !important;
+}
+
+::ng-deep .p-paginator {
+  background: transparent !important;
+  color: #231f20 !important;
+}
+
+::ng-deep .p-tag {
+  color: #231f20 !important;
+}
+
+::ng-deep .p-tag-warn {
+  background: #ffa280 !important;
 }
 
 ::ng-deep .p-datatable-thead > tr > th.p-datatable-column-sorted
@@ -45,16 +56,25 @@
 ::ng-deep .p-datatable-thead > tr > th
 {
   white-space: nowrap;
-}
-
-::ng-deep .p-datatable-thead > tr > th {
-  background-color: transparent !important;
-  color: black !important;
+  background: transparent !important;
+  color: #231f20 !important;
+  border-color: #c8c8c8 !important;
+  border-bottom-width: 2px !important;
 }
 
 ::ng-deep .p-datatable-tbody > tr {
-  background-color: transparent !important;
-  color: black !important;
+  background: transparent !important;
+  color: #231f20 !important;
+}
+
+::ng-deep .p-datatable-tbody > tr > td {
+  border-color: #c8c8c8 !important;
+  border-bottom-width: 2px !important;
+}
+
+::ng-deep .p-paginator-page-selected {
+  background: #27272a !important;
+  color: #e2e8f0 !important;
 }
 
 .subCampaignCheckbox {
@@ -101,8 +121,8 @@
   top: 25%;   /* Space from the top */
   bottom: 25%; /* Space from the bottom */
   right: 0;
-  width: 1px;
-  background-color: #e2e8f0; /* Line color */
+  width: 2px;
+  background-color: #c8c8c8; /* Line color */
 }
 
 ::ng-deep th:nth-child(11)::after {
@@ -126,4 +146,17 @@
   border-bottom: 1px solid #c8c8c8;
   margin-left: 1px;
   margin-right: 1px;
+}
+
+/* For WebKit browsers (Chrome, Safari) */
+progress::-webkit-progress-value {
+  background-color: #00bfff !important;
+  background: #00bfff;
+  color: #00bfff;
+}
+/* For Firefox */
+progress::-moz-progress-bar {
+  background-color: #00bfff !important;
+  background: #00bfff;
+  color: #00bfff;
 }

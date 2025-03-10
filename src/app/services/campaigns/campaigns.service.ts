@@ -26,7 +26,7 @@ export class CampaignsService {
       return this.http.get<any>(`${this.apiUrl}/fetch-csv-record`, { params });
     }
 
-    updateCampaign(updateRequest: { id: string, status: string }) {
+    updateCampaign(updateRequest: { id: string, status: string, userId: string | null }) {
       return this.http.post<any>(`${this.apiUrl}/update-campaign`, updateRequest);
     }
 }

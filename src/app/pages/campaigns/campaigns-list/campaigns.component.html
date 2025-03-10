@@ -20,13 +20,13 @@
                 </p-iconfield>
             </div>
         </div>
-        <p-table #dt [value]="filteredData" [paginator]="true" [rows]="10" dataKey="newField">
+        <p-table #dt [value]="filteredData" [paginator]="true" [rows]="10" dataKey="newField" [tableStyle]="">
             <ng-template pTemplate="header">
                 <tr>
                     <th style="min-width: 6rem;"></th>
                     <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
                     <th>CAMPAIGN NAME</th>
-                    <th style="border-right: 1px solid #e2e8f0;"></th>
+                    <th style="border-right: 1px solid #c8c8c8; border-right-width: 2px;"></th>
                     <th style="text-align: center;">STATUS</th>
                     <th style="text-align: center;">START DATE</th>
                     <th style="text-align: center;">END DATE</th>
@@ -48,22 +48,36 @@
                     <td>{{ campaign.newField }} - {{campaign.campaignSubText}} <br>
                         {{ campaign.campaignSubText}} | {{ campaign.client}}
                     </td>
-                    <td style="border-right: 1px solid #e2e8f0;"></td>
-                    <td>
+                    <td style="border-right: 1px solid #c8c8c8; border-right-width: 2px;"></td>
+                    <td class="text-center">
                         <p-tag [value]="campaign.status" [severity]="getTagSeverity(campaign.status)"></p-tag>
                     </td>
+                    <!-- <td class="text-center">
+                        {{ campaign.earliestStartDate | date: 'dd MMM yyyy' }} <br>
+                        {{ campaign.latestStartDate | date: 'dd MMM yyyy' }}
+                    </td>
+                    <td class="text-center">
+                        {{ campaign.earliestEndDate | date: 'dd MMM yyyy' }} <br>
+                        {{ campaign.latestEndDate | date: 'dd MMM yyyy' }}
+                    </td> -->
                     <td>
-                        {{ campaign.earliestStartDate }} <br>
-                        {{ campaign.latestStartDate }}
+                        <div class="d-flex justify-content-center">
+                            <p class="m-0">{{ campaign.earliestStartDate | date: 'dd MMM yyyy' }} <br> 00:00</p>
+                        </div>
                     </td>
                     <td>
-                        {{ campaign.earliestEndDate }} <br>
-                        {{ campaign.latestEndDate }}
+                        <div class="d-flex justify-content-center">
+                            <p class="m-0">{{ campaign.latestEndDate | date: 'dd MMM yyyy' }} <br> 23:59</p>
+                        </div>
                     </td>
                     <td>
-                        {{ campaign.sumSpent | number:'1.2-2' }} MYR <br>
-                        <progress [value]="campaign.progressValue" max="100"></progress><br>
-                        {{ campaign.sumBudget | number:'1.2-2' }} MYR
+                        <div class="d-flex justify-content-center">
+                        <div class="d-flex flex-column">
+                            {{ campaign.sumSpent | number:'1.2-2' }} MYR
+                            <progress [value]="campaign.progressValue" max="100" style="background-color: #00bfff; background: #00bfff; color: #00bfff; height: 5px; gap: 3px;"></progress>
+                            {{ campaign.sumBudget | number:'1.2-2' }} MYR
+                        </div>
+                        </div>
                     </td>
                     <td style="text-align: right;">{{ campaign.sumImpressions | number }}</td>
                     <td style="text-align: right;">{{ campaign.sumView | number }}</td>
@@ -79,16 +93,16 @@
                         {{ sub.subCampaign }} / {{sub.subCampaignSubText}} <br>
                         Order
                     </td>
-                    <td style="border-right: 1px solid #e2e8f0;">
+                    <td style="border-right: 1px solid #c8c8c8; border-right-width: 2px;">
                         <p-menu #menu [popup]="true" [model]="menuItems" [appendTo]="'body'"></p-menu>
                         <i class="pi pi-ellipsis-v" (click)="onMenuClick($event, sub, menu)"></i>
                     </td>
-                    <td>
+                    <td class="text-center">
                         <p-tag [value]="sub.status" [severity]="getTagSeverity(sub.status)"></p-tag>
                     </td>
-                    <td>{{ sub.startDate }}</td>
-                    <td>{{ sub.endDate }}</td>
-                    <td>{{ sub.budget | number:'1.2-2' }} MYR</td>
+                    <td class="text-center">{{ sub.startDate | date: 'dd MMM yyyy' }}</td>
+                    <td class="text-center">{{ sub.endDate | date: 'dd MMM yyyy' }}</td>
+                    <td style="padding-left: 2.5rem;">{{ sub.budget | number:'1.2-2' }} MYR</td>
                     <td style="text-align: right;">{{ sub.impressions | number }}</td>
                     <td style="text-align: right;">{{ sub.views | number }}</td>
                     <td style="text-align: right;">{{ sub.reach | number:'1.2-2' }}</td>

@@ -8,13 +8,21 @@ import { ReportService, SuccessFailToastService } from '../../services';
 import { Observable } from 'rxjs';
 import { Report } from '../../interfaces';
 import { NgbdSortableHeader, SortEvent } from '../../directives';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { SuccessFailToastComponent } from '../shared';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { TagModule } from 'primeng/tag';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputIconModule } from 'primeng/inputicon';
+import { IconFieldModule } from 'primeng/iconfield';
 
 @Component({
   selector: 'app-reports',
-  imports: [AppModule, NgbDatepickerModule, ReactiveFormsModule, NgIcon, NgbHighlight, NgbdSortableHeader, NgbPaginationModule, SuccessFailToastComponent],
+  imports: [AppModule, NgbDatepickerModule, ReactiveFormsModule, NgIcon, NgbHighlight, NgbdSortableHeader, NgbPaginationModule, SuccessFailToastComponent,
+    TagModule, TableModule, ButtonModule, InputIconModule, IconFieldModule],
   providers: [provideIcons({ bootstrapCalendar3, bootstrapFileEarmarkPdf }), ReportService, SuccessFailToastService, HttpClient],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.less'
@@ -32,6 +40,7 @@ export class ReportsComponent implements OnInit {
   failMsgVisible = false;
   isLoading = true;
   isSubmitted = false;
+  tableData: any[] = [];
 
   dateFilterForm: FormGroup = new FormGroup({
     client: new FormControl<string | null>(null, [Validators.required]),
@@ -46,6 +55,7 @@ export class ReportsComponent implements OnInit {
   headers!: QueryList<NgbdSortableHeader>;
   @ViewChild('successTpl') successTpl!: TemplateRef<any>;
   @ViewChild('failedTpl') failedTpl!: TemplateRef<any>;
+  @ViewChild('noRecordTpl') noRecordTpl!: TemplateRef<any>;
 
   constructor(public service: ReportService, private http: HttpClient) {
     this.reports$ = service.reports$;
@@ -138,41 +148,93 @@ export class ReportsComponent implements OnInit {
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
   }
 
+  getBadgeClass(status: string, parentStatus?: string): string {
+    if (!status || status.length === 0) {
+      switch (parentStatus) {
+        case 'Active': return 'badge badge-success';
+        case 'Ended': return 'badge badge-danger';
+        case 'Paused': return 'badge badge-info';
+        default: return 'badge badge-secondary';
+      }
+    }
+    switch (status) {
+      case 'Active': return 'badge badge-success';
+      case 'Ended': return 'badge badge-danger';
+      case 'Paused': return 'badge badge-info';
+      default: return 'badge badge-secondary';
+    }
+  }
+
+  generatePDFReport(id: number, filename: string) {
+    const element = document.getElementById('table-container');
+
+    if (!element) {
+      console.error('Table container not found.');
+      return;
+    }
+
+    html2canvas(element, { scale: 2 }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 190; // A4 width in mm (leaving some margin)
+      const pageHeight = 297; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let heightLeft = imgHeight;
+      let position = 10; // Initial margin
+
+      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      const pdfBlob = pdf.output('blob');
+
+      // HTTP Post - Upload to storage
+      const formData = new FormData();
+      formData.append('file', pdfBlob, `${filename}.pdf`);
+
+      this.http.post<any>(`${environment.apiUrl}/upload-report/${id}`, formData).subscribe(res => {
+        if (res.message === "UPLOAD_SUCCESSFUL") {
+          this.toastService.show({ template: this.successTpl, classname: 'bg-success text-light', header: 'Success' });
+        }
+        else {
+          this.toastService.show({ template: this.failedTpl, classname: 'bg-danger text-light', header: 'Fail' });
+        }
+      });
+    });
+  }
+
   onSubmit() {
     this.isSubmitted = true;
     if (this.dateFilterForm.valid) {
       const body = {
         client: this.dateFilterForm.value.client,
         startDate: this.dateFilterForm.value.fromDate + 'T16:00:00.000Z',
-        endDate: this.dateFilterForm.value.toDate + 'T23:59:59.999Z'
+        endDate: this.dateFilterForm.value.toDate + 'T23:59:59.999Z',
+        userId: localStorage.getItem('id'),
       }
 
-      this.toastService.show({ template: this.successTpl, classname: 'bg-success text-light', header: 'Success' });
+      this.http.post<any>(`${environment.apiUrl}/filter-report`, body).subscribe(res => {
+        if (res.records && res.records.length > 0) {
+          this.tableData = res.records;
+          setTimeout(() => {
+            const docName = `${this.dateFilterForm.value.client ?? 'null'}_${this.dateFilterForm.value.fromDate ?? 'null'}_${this.dateFilterForm.value.toDate ?? 'null'}`
+            this.generatePDFReport(res.reportId, docName);
+          }, 1000);
+        }
+        else if (res.records && res.records.length === 0) {
+          this.toastService.show({ template: this.noRecordTpl, classname: 'bg-danger text-light', header: 'Fail' });
+        }
+        else {
+          this.toastService.show({ template: this.failedTpl, classname: 'bg-danger text-light', header: 'Fail' });
+        }
+      });
     }
-    
-    // this.http.post<any>(`${environment.apiUrl}/filter-report`, body).subscribe(res => {
-    //   if (res.status === 201) {
-    //     const body = res.body;
-    //     // TODO: Generate PDF file for data returned
-    //     const formData = new FormData();
-    //     // formData.append('file', file);
-    //     const headers = new HttpHeaders({
-    //       'enctype': 'multipart/form-data'
-    //     });
-    //     this.http.post<any>(`${environment.apiUrl}/upload-report/${body.docName}`, formData, { headers }).subscribe(res => {
-    //       if (res.status === 201) {
-    //         this.toastService.show({ template: this.successTpl, classname: 'bg-success text-light', header: 'Success' });
-    //       }
-    //       else {
-    //         this.toastService.show({ template: this.failedTpl, classname: 'bg-danger text-light', header: 'Fail' });
-    //       }
-    //     });
-    //   }
-    //   else {
-    //     this.toastService.show({ template: this.failedTpl, classname: 'bg-danger text-light', header: 'Fail' });
-    //   }
-    // });
-
-    
   }
 }

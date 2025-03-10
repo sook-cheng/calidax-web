@@ -100,8 +100,8 @@ export class CampaignsComponent implements OnInit {
   pauseCampaign() {
     const updateRequest = {
       id: this.selectedCampaign.id,
-      recordId: this.selectedCampaign.recordId,
-      status: 'Paused'
+      status: 'Paused',
+      userId: localStorage.getItem('id'),
     };
 
     this.service.updateCampaign(updateRequest).subscribe(

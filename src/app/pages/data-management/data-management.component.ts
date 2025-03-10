@@ -36,7 +36,7 @@ export class DataManagementComponent {
   uploadCSV() {
     if (!this.selectedFile) return;
 
-    this.service.uploadCSV(this.selectedFile, this.selectedFile.name).subscribe({
+    this.service.uploadCSV(this.selectedFile, 'LOOKER_STUDIO', localStorage.getItem('id')).subscribe({
       next: (response) => {
         alert('Upload successful!');
         this.clearFile(document.getElementById('fileInput') as HTMLInputElement);

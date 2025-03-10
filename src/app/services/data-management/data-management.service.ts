@@ -11,10 +11,10 @@ export class DataManagementService {
 
   constructor(private http: HttpClient) {}
 
-  uploadCSV(file: File, type: string): Observable<any> {
+  uploadCSV(file: File, type: string, userId: any): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.http.post<any>(`${this.apiUrl}/upload-csv/${type}`, formData);
+    return this.http.post<any>(`${this.apiUrl}/upload-csv/${type}/${userId}`, formData);
   }
 }

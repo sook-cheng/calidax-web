@@ -5,6 +5,7 @@
     <ng-template #noRecordTpl> No record found. </ng-template>
 
     <!-- Generate report filters -->
+     <h3 style="margin: 1.5rem 0.75rem;">Generate Report</h3>
     <form class="row row-cols-sm-auto flex-column" [formGroup]="dateFilterForm" (ngSubmit)="onSubmit()">
         <div class="label-field">
             <label for="clientDropdown" class="col-sm-1 col-form-label required"><strong>Client</strong></label>
@@ -79,6 +80,7 @@
     <hr />
 
     <!-- Reports history table -->
+    <!-- <h3 style="margin: 1.5rem 0.75rem;">Reports History</h3>
     <form>
         <div class="mb-3 row">
             <label for="table-search-name" class="col-sm-1 col-form-label"><strong>Search Name</strong></label>
@@ -91,7 +93,7 @@
             <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col" sortable="name" (sort)="onSort($event)">Name</th>
+                    <th scope="col" sortable="client" (sort)="onSort($event)">Name</th>
                     <th scope="col" sortable="startDate" (sort)="onSort($event)">Start Date</th>
                     <th scope="col" sortable="endDate" (sort)="onSort($event)">End Date</th>
                     <th scope="col">File</th>
@@ -108,9 +110,9 @@
                 @for (report of reports$ | async; track report.id) {
                 <tr>
                     <th scope="row">{{ report.id }}</th>
-                    <td><ngb-highlight [result]="report.name" [term]="service.searchTerm" /></td>
-                    <td>{{ report.startDate }}</td>
-                    <td>{{ report.endDate }}</td>
+                    <td><ngb-highlight [result]="report.client" [term]="service.searchTerm" /></td>
+                    <td>{{ report.startDate | date: 'dd MMM yyyy' }}</td>
+                    <td>{{ report.endDate | date: 'dd MMM yyyy' }}</td>
                     <td>
                         <a href="{{ report.url }}" target="_blank">
                             <ng-icon name="bootstrapFileEarmarkPdf" class="icon"></ng-icon>
@@ -130,10 +132,11 @@
         </div>
     </form>
 
-    <hr />
+    <hr /> -->
 
     <!-- Hidden Report PDF template -->
-    <div id="table-container" style="display: none;">
+    <h3 style="margin: 1.5rem 0.75rem;">Report Preview</h3>
+    <div id="table-container">
         <p-table #dt [value]="tableData" [paginator]="true" [rows]="10" dataKey="newField" [tableStyle]="">
             <ng-template pTemplate="header">
                 <tr>
@@ -164,7 +167,9 @@
                     </td>
                     <td style="border-right: 1px solid #c8c8c8; border-right-width: 2px;"></td>
                     <td class="text-center">
-                        <span [class]="getBadgeClass(campaign.status)">{{ campaign.status }}</span>
+                        <div [class]="getBadgeClass(campaign.status)">
+                            {{ campaign.status }}
+                        </div>
                     </td>
                     <td>
                         <div class="d-flex justify-content-center">
@@ -201,7 +206,9 @@
                         <i class="pi pi-ellipsis-v"></i>
                     </td>
                     <td class="text-center">
-                        <span [class]="getBadgeClass(sub.status, campaign.status)">{{ (!sub.status || sub.status.length === 0) ? campaign.status : sub.status }}</span>
+                        <div [class]="getBadgeClass(sub.status, campaign.status)">
+                            {{ (!sub.status || sub.status.length === 0) ? campaign.status : sub.status }}
+                        </div>
                     </td>
                     <td class="text-center">{{ sub.startDate | date: 'dd MMM yyyy' }}</td>
                     <td class="text-center">{{ sub.endDate | date: 'dd MMM yyyy' }}</td>

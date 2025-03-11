@@ -151,17 +151,17 @@ export class ReportsComponent implements OnInit {
   getBadgeClass(status: string, parentStatus?: string): string {
     if (!status || status.length === 0) {
       switch (parentStatus) {
-        case 'Active': return 'badge badge-success';
-        case 'Ended': return 'badge badge-danger';
-        case 'Paused': return 'badge badge-info';
-        default: return 'badge badge-secondary';
+        case 'Active': return 'p-tag p-tag-success';
+        case 'Ended': return 'p-tag p-tag-warn';
+        case 'Paused': return 'p-tag p-tag-info';
+        default: return 'p-tag p-tag-secondary';
       }
     }
     switch (status) {
-      case 'Active': return 'badge badge-success';
-      case 'Ended': return 'badge badge-danger';
-      case 'Paused': return 'badge badge-info';
-      default: return 'badge badge-secondary';
+      case 'Active': return 'p-tag p-tag-success';
+      case 'Ended': return 'p-tag p-tag-warn';
+      case 'Paused': return 'p-tag p-tag-info';
+      default: return 'p-tag p-tag-secondary';
     }
   }
 
@@ -193,12 +193,13 @@ export class ReportsComponent implements OnInit {
         heightLeft -= pageHeight;
       }
 
+      pdf.save(`${filename}.pdf`);
       const pdfBlob = pdf.output('blob');
 
       // HTTP Post - Upload to storage
       const formData = new FormData();
       formData.append('file', pdfBlob, `${filename}.pdf`);
-
+      
       this.http.post<any>(`${environment.apiUrl}/upload-report/${id}`, formData).subscribe(res => {
         if (res.message === "UPLOAD_SUCCESSFUL") {
           this.toastService.show({ template: this.successTpl, classname: 'bg-success text-light', header: 'Success' });

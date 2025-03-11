@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    apiUrl: "",
-    cookieDomain: ""
+    apiUrl: "http://api.calidaxtech.com",
+    cookieDomain: "dashboard.calidaxtech.com",
 };

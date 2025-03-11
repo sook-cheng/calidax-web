@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { bootstrapCheckCircleFill } from '@ng-icons/bootstrap-icons';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { AppModule } from '../../app.module';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-events-manager',
@@ -10,36 +11,40 @@ import { AppModule } from '../../app.module';
   templateUrl: './events-manager.component.html',
   styleUrl: './events-manager.component.less'
 })
-export class EventsManagerComponent {
+export class EventsManagerComponent implements OnInit {
   text: string = 'Initializing';
   isFadingOut: boolean = false;
   isLoading: boolean = true;
   isFillingIcon: boolean = false; // Control icon slowly filled animation
 
-  constructor() {
-    setTimeout(() => {
-      this.fadeOutAndChangeText("Connecting to the server");
-    }, 2000);
+  constructor(@Inject(PLATFORM_ID) private platformId: object) {}
 
-    setTimeout(() => {
-      this.fadeOutAndChangeText("Fetching the data");
-    }, 5000);
-
-    setTimeout(() => {
-      this.fadeOutAndChangeText("Generating the statistics");
-    }, 10000);
-
-    setTimeout(() => {
-      this.fadeOutAndChangeText("Almost there");
-    }, 25000);
-
-    setTimeout(() => {
-      this.fadeOutAndChangeText("Done!");
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
       setTimeout(() => {
-        this.isLoading = false;
-        this.isFillingIcon = true; // Start the filling icon animation
-      }, 1000);
-    }, 30000);
+        this.fadeOutAndChangeText("Connecting to the server");
+      }, 2000);
+  
+      setTimeout(() => {
+        this.fadeOutAndChangeText("Fetching the data");
+      }, 5000);
+  
+      setTimeout(() => {
+        this.fadeOutAndChangeText("Generating the statistics");
+      }, 10000);
+  
+      setTimeout(() => {
+        this.fadeOutAndChangeText("Almost there");
+      }, 25000);
+  
+      setTimeout(() => {
+        this.fadeOutAndChangeText("Done!");
+        setTimeout(() => {
+          this.isLoading = false;
+          this.isFillingIcon = true; // Start the filling icon animation
+        }, 1000);
+      }, 30000);
+    }
   }
 
   fadeOutAndChangeText(t: string) {

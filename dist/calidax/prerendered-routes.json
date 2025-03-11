@@ -1,0 +1,11 @@
+{
+  "routes": {
+    "/": {},
+    "/campaigns": {},
+    "/campaigns/new-campaign": {},
+    "/data-management": {},
+    "/events-manager": {},
+    "/profile": {},
+    "/reports": {}
+  }
+}

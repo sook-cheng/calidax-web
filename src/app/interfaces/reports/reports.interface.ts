@@ -1,6 +1,6 @@
 export interface Report {
 	id: number;
-	name: string;
+	client: string;
 	startDate: Date;
 	endDate: Date;
 	url: string;

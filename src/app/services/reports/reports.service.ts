@@ -35,7 +35,7 @@ function sort(reports: Report[], column: SortColumn, direction: string): Report[
 
 function matches(report: Report, term: string) {
 	return (
-		report.name.toLowerCase().includes(term.toLowerCase())
+		report.client.toLowerCase().includes(term.toLowerCase())
 	);
 }
 

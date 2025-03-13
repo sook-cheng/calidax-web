@@ -5,7 +5,7 @@
     <ng-template #noRecordTpl> No record found. </ng-template>
 
     <!-- Generate report filters -->
-     <h3 style="margin: 1.5rem 0.75rem;">Generate Report</h3>
+     <h5 style="margin: 1.5rem 0.75rem;">Generate Report</h5>
     <form class="row row-cols-sm-auto flex-column" [formGroup]="dateFilterForm" (ngSubmit)="onSubmit()">
         <div class="label-field">
             <label for="clientDropdown" class="col-sm-1 col-form-label required"><strong>Client</strong></label>
@@ -80,7 +80,7 @@
     <hr />
 
     <!-- Reports history table -->
-    <!-- <h3 style="margin: 1.5rem 0.75rem;">Reports History</h3>
+    <!-- <h5 style="margin: 1.5rem 0.75rem;">Reports History</h5>
     <form>
         <div class="mb-3 row">
             <label for="table-search-name" class="col-sm-1 col-form-label"><strong>Search Name</strong></label>
@@ -135,7 +135,7 @@
     <hr /> -->
 
     <!-- Hidden Report PDF template -->
-    <h3 style="margin: 1.5rem 0.75rem;">Report Preview</h3>
+    <h5 style="margin: 1.5rem 0.75rem;">Report Preview</h5>
     <div id="table-container">
         <p-table #dt [value]="tableData" [paginator]="true" [rows]="10" dataKey="newField" [tableStyle]="">
             <ng-template pTemplate="header">
@@ -144,14 +144,14 @@
                     <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
                     <th>CAMPAIGN NAME</th>
                     <th style="border-right: 1px solid #c8c8c8; border-right-width: 2px;"></th>
-                    <th style="text-align: center;">STATUS</th>
-                    <th style="text-align: center;">START DATE</th>
-                    <th style="text-align: center;">END DATE</th>
-                    <th style="text-align: center;">BUDGET DELIVERED</th>
-                    <th style="text-align: center;">IMPRESSIONS</th>
-                    <th style="text-align: center;">VIEWS</th>
-                    <th style="text-align: center;">REACH</th>
-                    <th style="text-align: center;">CLICKS</th>
+                    <th>STATUS</th>
+                    <th>START DATE</th>
+                    <th>END DATE</th>
+                    <th>BUDGET DELIVERED</th>
+                    <th>IMPRESSIONS</th>
+                    <th>VIEWS</th>
+                    <th>REACH</th>
+                    <th>CLICKS</th>
                 </tr>
             </ng-template>
             <ng-template #body let-campaign>
@@ -190,10 +190,10 @@
                         </div>
                         </div>
                     </td>
-                    <td style="text-align: right;">{{ campaign.sumImpressions | number }}</td>
-                    <td style="text-align: right;">{{ campaign.sumView | number }}</td>
-                    <td style="text-align: right;">{{ campaign.sumReach | number:'1.2-2' }}</td>
-                    <td style="text-align: right;">{{ campaign.sumClicks | number }}</td>
+                    <td class="text-end">{{ campaign.sumImpressions | number }}</td>
+                    <td class="text-end">{{ campaign.sumView | number }}</td>
+                    <td class="text-end">{{ campaign.sumReach | number:'1.2-2' }}</td>
+                    <td class="text-end">{{ campaign.sumClicks | number }}</td>
                 </tr>
                 <tr *ngFor="let sub of campaign.subCampaign">
                     <td></td>
@@ -213,10 +213,10 @@
                     <td class="text-center">{{ sub.startDate | date: 'dd MMM yyyy' }}</td>
                     <td class="text-center">{{ sub.endDate | date: 'dd MMM yyyy' }}</td>
                     <td style="padding-left: 2.5rem;">{{ sub.budget | number:'1.2-2' }} MYR</td>
-                    <td style="text-align: right;">{{ sub.impressions | number }}</td>
-                    <td style="text-align: right;">{{ sub.views | number }}</td>
-                    <td style="text-align: right;">{{ sub.reach | number:'1.2-2' }}</td>
-                    <td style="text-align: right;">{{ sub.clicks | number }}</td>
+                    <td class="text-end">{{ sub.impressions | number }}</td>
+                    <td class="text-end">{{ sub.views | number }}</td>
+                    <td class="text-end">{{ sub.reach | number:'1.2-2' }}</td>
+                    <td class="text-end">{{ sub.clicks | number }}</td>
                 </tr>
             </ng-template>
         </p-table>

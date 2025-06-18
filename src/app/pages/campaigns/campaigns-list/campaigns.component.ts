@@ -51,13 +51,6 @@ export class CampaignsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadData();
-    this.menuItems = [
-      {
-        label: 'Pause',
-        icon: 'pi pi-pause',
-        command: (event) => this.pauseCampaign()
-      }
-    ];
   }
 
   loadData(): void {
@@ -65,6 +58,33 @@ export class CampaignsComponent implements OnInit {
       this.data = response.records;
       this.filteredData = [...this.data]; // Default display
       this.filteredData = response.records.flat();
+      this.updateMenuItemsForAll();
+    });
+  }
+  
+  updateMenuItemsForAll() {
+    this.filteredData.forEach(campaign => {
+      if (campaign.subCampaign && Array.isArray(campaign.subCampaign)) {
+        campaign.subCampaign.forEach((sub: any) => {
+          if (sub.status === 'Paused') {
+            sub.menuItems = [
+            {
+              label: 'Active',
+              icon: 'pi pi-play-circle',
+              command: (event: any) => this.activeAndPauseCampaign('Active')
+            }
+            ];
+          } else {
+            sub.menuItems = [
+            {
+              label: 'Pause',
+              icon: 'pi pi-pause',
+              command: (event: any) => this.activeAndPauseCampaign('Paused')
+            }
+            ];
+          }
+        });
+      }
     });
   }
 
@@ -97,10 +117,10 @@ export class CampaignsComponent implements OnInit {
     menu.toggle(event);
   }
 
-  pauseCampaign() {
+  activeAndPauseCampaign(status: string) {
     const updateRequest = {
       id: this.selectedCampaign.id,
-      status: 'Paused',
+      status: status,
       userId: localStorage.getItem('id'),
     };
 

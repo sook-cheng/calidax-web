@@ -94,8 +94,8 @@
                         Order
                     </td>
                     <td style="border-right: 1px solid #c8c8c8; border-right-width: 2px;">
-                        <p-menu #menu [popup]="true" [model]="menuItems" [appendTo]="'body'"></p-menu>
-                        <i class="pi pi-ellipsis-v" (click)="onMenuClick($event, sub, menu)"></i>
+                        <p-menu #menu [popup]="true" [model]="sub.menuItems" [appendTo]="'body'"></p-menu>
+                        <i class="pi pi-ellipsis-v" *ngIf="sub.status !== 'Ended'" (click)="onMenuClick($event, sub, menu)"></i>
                     </td>
                     <td class="text-center">
                         <p-tag [value]="sub.status" [severity]="getTagSeverity(sub.status)"></p-tag>

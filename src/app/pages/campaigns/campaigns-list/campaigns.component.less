@@ -8,6 +8,13 @@
   }
 }
 
+::ng-deep .p-datatable-tbody {
+  tr:hover {
+    background-color: #f2f3f4 !important;
+    cursor: pointer;
+  }
+}
+
 ::ng-deep .p-select {
   margin-left: 2rem;
   background: transparent !important;
@@ -16,6 +23,7 @@
 
 ::ng-deep .p-select-label {
   font-size: 15px;
+  color: black;
 }
 
 ::ng-deep .p-select-overlay {
@@ -25,6 +33,7 @@
 ::ng-deep .p-inputtext {
   background: transparent !important;
   border: 1px solid #c8c8c8 !important;
+  color: black;
 }
 
 ::ng-deep .p-button-icon-only {
@@ -157,4 +166,52 @@ progress::-moz-progress-bar {
   background-color: #00bfff !important;
   background: #00bfff;
   color: #00bfff;
+}
+
+.dp-hidden {
+    width: 0;
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+.custom-day {
+    text-align: center;
+    padding: 0.185rem 0.25rem;
+    display: inline-block;
+    height: 2rem;
+    width: 2rem;
+}
+.custom-day.focused {
+    background-color: #e6e6e6;
+}
+.custom-day.range,
+.custom-day:hover {
+    background-color: rgb(2, 117, 216);
+    color: white;
+}
+.custom-day.faded {
+    background-color: rgba(2, 117, 216, 0.5);
+}
+.date-field {
+  background-color: #ececec;
+  border: 1px solid #c8c8c8 !important;
+  color: black;
+  border-radius: var(--p-border-radius-md);
+  padding: 0.5rem 0.75rem;
+}
+.datepickerrange {
+  max-width: fit-content !important;
+}
+.search-button {
+  padding: 10px !important;
+}
+.icon-btn-secondary {
+    background: transparent;
+    font-weight: bold;
+    color: black;
+    border: none;
+
+    &:hover {
+      color: red;
+    }
 }

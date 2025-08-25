@@ -13,6 +13,43 @@
                 <p-dropdown [options]="statusOptions" placeholder="Status" [(ngModel)]="selectedStatus" (onChange)="filterTable()"></p-dropdown>
                 <p-dropdown [options]="campaignObjective" placeholder="Campaign Objective" [(ngModel)]="selectedObjective" (onChange)="filterTable()"></p-dropdown>
             </div>
+            <div class="d-flex gap-2 datepickerrange">
+                <div>
+                    <!-- Datepicker popup -->
+                    <div class="dp-hidden position-absolute">
+                        <div class="input-group">
+                            <input name="datepicker" ngbDatepicker #datepicker="ngbDatepicker"
+                                [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2"
+                                [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1" />
+                            <ng-template #t let-date let-focused="focused">
+                                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                                    [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                                    (mouseleave)="hoveredDate = null">
+                                    {{ date.day }}
+                                </span>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <!-- From date -->
+                    <div class="input-group">
+                        <input #dpFromDate placeholder="yyyy-mm-dd" (input)="validateInput($event, 'FROM')" [(ngModel)]="fromDateStr" class="date-field" />
+                        <button class="btn btn-outline-secondary d-flex align-items-center" (click)="datepicker.toggle()" type="button">
+                            <ng-icon name="bootstrapCalendar3" class="icon"></ng-icon></button>
+                    </div>
+                </div>
+                <div>
+                    <!-- To date -->
+                    <div class="input-group">
+                        <input #dpToDate placeholder="yyyy-mm-dd" (input)="validateInput($event, 'TO')" [(ngModel)]="toDateStr" class="date-field" />
+                        <button class="btn btn-outline-secondary d-flex align-items-center" (click)="datepicker.toggle()" type="button">
+                            <ng-icon name="bootstrapCalendar3" class="icon"></ng-icon></button>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn_primary search-button" (click)="filterByDate()"><ng-icon name="bootstrapSearch" class="icon"></ng-icon></button>
+                    <button class="icon-btn-secondary" (click)="clearFilter()"><ng-icon name="bootstrapXLg" class="icon"></ng-icon></button>
+                </div>
+            </div>
             <div class="col" class="searchInput col">
                 <p-iconfield>
                     <p-inputicon styleClass="pi pi-search" />
@@ -52,14 +89,6 @@
                     <td class="text-center">
                         <p-tag [value]="campaign.status" [severity]="getTagSeverity(campaign.status)"></p-tag>
                     </td>
-                    <!-- <td class="text-center">
-                        {{ campaign.earliestStartDate | date: 'dd MMM yyyy' }} <br>
-                        {{ campaign.latestStartDate | date: 'dd MMM yyyy' }}
-                    </td>
-                    <td class="text-center">
-                        {{ campaign.earliestEndDate | date: 'dd MMM yyyy' }} <br>
-                        {{ campaign.latestEndDate | date: 'dd MMM yyyy' }}
-                    </td> -->
                     <td>
                         <div class="d-flex justify-content-center">
                             <p class="m-0">{{ campaign.earliestStartDate | date: 'dd MMM yyyy' }} <br> 00:00</p>
@@ -95,7 +124,7 @@
                     </td>
                     <td style="border-right: 1px solid #c8c8c8; border-right-width: 2px;">
                         <p-menu #menu [popup]="true" [model]="sub.menuItems" [appendTo]="'body'"></p-menu>
-                        <i class="pi pi-ellipsis-v" *ngIf="sub.status !== 'Ended'" (click)="onMenuClick($event, sub, menu)"></i>
+                        <i class="pi pi-ellipsis-v" (click)="onMenuClick($event, sub, menu)"></i>
                     </td>
                     <td class="text-center">
                         <p-tag [value]="sub.status" [severity]="getTagSeverity(sub.status)"></p-tag>
@@ -105,7 +134,7 @@
                     <td style="padding-left: 2.5rem;">{{ sub.budget | number:'1.2-2' }} MYR</td>
                     <td class="text-end">{{ sub.impressions | number }}</td>
                     <td class="text-end">{{ sub.views | number }}</td>
-                    <td class="text-end">{{ sub.reach | number:'1.2-2' }}</td>
+                    <td class="text-end">{{ sub.reach | number }}</td>
                     <td class="text-end">{{ sub.clicks | number }}</td>
                 </tr>
             </ng-template>

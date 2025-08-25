@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import Aura from '@primeng/themes/aura';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +23,7 @@ export const appConfig: ApplicationConfig = {
       theme: {
           preset: Aura
       }
-  })
+    }),
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
 };

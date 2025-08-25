@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AppModule } from '../../../app.module';
 import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
@@ -13,21 +13,31 @@ import { MenuModule } from 'primeng/menu';
 import { Router, RouterModule } from '@angular/router';
 import { CampaignsService } from '../../../services';
 import { Menu } from 'primeng/menu';
+import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import { bootstrapCalendar3, bootstrapSearch, bootstrapXLg } from '@ng-icons/bootstrap-icons';
 
 @Component({
   selector: 'app-campaigns',
   imports: [AppModule, TableModule, DropdownModule, InputIconModule, IconFieldModule, FormsModule, InputTextModule, ButtonModule,
-    TagModule, MenuModule, RouterModule, Menu],
+    TagModule, MenuModule, RouterModule, Menu, NgbDatepickerModule, NgIcon, IconFieldModule],
+  providers: [provideIcons({ bootstrapCalendar3, bootstrapSearch, bootstrapXLg })],
   templateUrl: './campaigns.component.html',
   styleUrl: './campaigns.component.less'
 })
 export class CampaignsComponent implements OnInit {
+  calendar = inject(NgbCalendar);
+  formatter = inject(NgbDateParserFormatter);
 
   constructor(
     private router: Router,
     private service: CampaignsService,
   ) { }
 
+  hoveredDate: NgbDate | null = null;
+  fromDate: NgbDate | null = this.calendar.getToday();
+  fromDateStr: string | null = null;
+  toDateStr: string | null = null;
   menuItems: MenuItem[] = [];
   selectedCampaign: any = null;
   selectedStatus: string | null = null; // Default to 'All' (null)
@@ -144,5 +154,70 @@ export class CampaignsComponent implements OnInit {
 
   newCampaign() {
     this.router.navigate(['/campaigns/new-campaign']);
+  }
+
+  onDateSelection(date: NgbDate) {
+    const fromDate = this.formatter.parse(this.fromDateStr!);
+    const toDate = this.formatter.parse(this.toDateStr!);
+    const formattedDate = this.formatter.format(date);
+
+    if (!fromDate && !toDate) {
+      this.fromDateStr = formattedDate;
+    } else if (fromDate && !toDate && date && date.after(fromDate)) {
+      this.toDateStr = formattedDate;
+    } else {
+      this.toDateStr = null;
+      this.fromDateStr = formattedDate
+    }
+  }
+
+  isHovered(date: NgbDate) {
+    const fromDate = this.formatter.parse(this.fromDateStr!);
+    const toDate = this.formatter.parse(this.toDateStr!);
+    return (
+      fromDate && !toDate && this.hoveredDate && date.after(fromDate) && date.before(this.hoveredDate)
+    );
+  }
+
+  isInside(date: NgbDate) {
+    const fromDate = this.formatter.parse(this.fromDateStr!);
+    const toDate = this.formatter.parse(this.toDateStr!);
+    return toDate && date.after(fromDate) && date.before(toDate);
+  }
+
+  isRange(date: NgbDate) {
+    const fromDate = this.formatter.parse(this.fromDateStr!);
+    const toDate = this.formatter.parse(this.toDateStr!);
+    return (
+      date.equals(fromDate) ||
+      (toDate && date.equals(toDate)) ||
+      this.isInside(date) ||
+      this.isHovered(date)
+    );
+  }
+
+  validateInput(event: Event, source: string): NgbDate | null {
+    const input = event.target as HTMLInputElement;
+    const currentValue: any = this.formatter.parse(source === 'FROM' ? this.fromDateStr! : this.toDateStr!);
+    const parsed = this.formatter.parse(input.value);
+
+    // Set dates
+    const fromParts = this.fromDateStr!.split('-');
+    this.fromDate = new NgbDate(parseInt(fromParts[0]), parseInt(fromParts[1]), parseInt(fromParts[2]));
+
+    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  }
+
+  filterByDate() {
+    if (!this.fromDateStr || !this.toDateStr) return;
+    this.filteredData = this.filteredData.filter(data => new Date(data.earliestStartDate) <= new Date(this.fromDateStr!) && 
+      new Date(data.latestEndDate) >= new Date(this.toDateStr!)
+    );
+  }
+
+  clearFilter() {
+    this.fromDateStr = null;
+    this.toDateStr = null;
+    this.loadData();
   }
 }

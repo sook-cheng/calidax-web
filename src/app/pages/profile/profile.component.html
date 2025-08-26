@@ -1,4 +1,7 @@
+<app-success-fail-toast aria-live="polite" aria-atomic="true"></app-success-fail-toast>
 <div style="padding: 2rem; background-color: white;">
+    <ng-template #successTpl> Password updated successfully! </ng-template>
+    <ng-template #failedTpl> Failed to update password. </ng-template>
     <h4>Profile</h4>
     <form #userForm="ngForm">
         <div class="form-group mt-3">
@@ -25,7 +28,7 @@
         </div>
       </form>
       <div class="row btn_function">
-        <button class="btn_save" (click)="updatePassword()">Save</button>
+        <button class="btn_save" (click)="updatePassword()" [disabled]="!userData.isAdmin">Save</button>
     </div>
 
     <p-dialog [(visible)]="displayConfirmation" [modal]="true" header="Confirm">

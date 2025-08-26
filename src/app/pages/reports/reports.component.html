@@ -1,224 +1,230 @@
 <app-success-fail-toast aria-live="polite" aria-atomic="true"></app-success-fail-toast>
-<div style="padding: 2rem;">
-    <ng-template #successTpl> Report generated successfully. </ng-template>
-    <ng-template #failedTpl> Failed to generate report. </ng-template>
-    <ng-template #noRecordTpl> No record found. </ng-template>
+@if(!isAdmin) 
+{
+    <app-access-denied-page></app-access-denied-page>
+}
+@else {
+    <div style="padding: 2rem;">
+        <ng-template #successTpl> Report generated successfully. </ng-template>
+        <ng-template #failedTpl> Failed to generate report. </ng-template>
+        <ng-template #noRecordTpl> No record found. </ng-template>
 
-    <!-- Generate report filters -->
-     <h5 style="margin: 1.5rem 0.75rem;">Generate Report</h5>
-    <form class="row row-cols-sm-auto flex-column" [formGroup]="dateFilterForm" (ngSubmit)="onSubmit()">
-        <div class="label-field">
-            <label for="clientDropdown" class="col-sm-1 col-form-label required"><strong>Client</strong></label>
-            <div class="d-flex flex-column" style="gap: 0.5rem;">
-                <select id="clientDropdown" class="form-select field" formControlName="client" required>
-                    <option *ngFor="let option of clientOptions" [value]="option">{{ option }}</option>
-                </select>
-                <!-- Error message -->
-                <div *ngIf="client?.invalid && (client?.touched || isSubmitted)" class="error">
-                    <div *ngIf="client?.hasError('required')">
-                        Client is required.
-                    </div>
-                </div>
-            </div>
-            
-        </div>
-        <div class="label-field">
-            <label class="col-sm-1 col-form-label required"><strong>Dates</strong></label>
-            <div>
-                <!-- Datepicker popup -->
-                <div class="dp-hidden position-absolute">
-                    <div class="input-group">
-                        <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
-                            [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2"
-                            [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1" />
-                        <ng-template #t let-date let-focused="focused">
-                            <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
-                                [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
-                                (mouseleave)="hoveredDate = null">
-                                {{ date.day }}
-                            </span>
-                        </ng-template>
-                    </div>
-                </div>
+        <!-- Generate report filters -->
+        <h5 style="margin: 1.5rem 0.75rem;">Generate Report</h5>
+        <form class="row row-cols-sm-auto flex-column" [formGroup]="dateFilterForm" (ngSubmit)="onSubmit()">
+            <div class="label-field">
+                <label for="clientDropdown" class="col-sm-1 col-form-label required"><strong>Client</strong></label>
                 <div class="d-flex flex-column" style="gap: 0.5rem;">
-                    <!-- From date -->
-                    <div class="input-group">
-                        <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate"
-                            (input)="validateInput($event, 'FROM')" formControlName="fromDate" required />
-                        <button class="btn btn-outline-secondary d-flex align-items-center" (click)="datepicker.toggle()" type="button">
-                            <ng-icon name="bootstrapCalendar3" class="icon"></ng-icon></button>
-                    </div>
+                    <select id="clientDropdown" class="form-select field" formControlName="client" required>
+                        <option *ngFor="let option of clientOptions" [value]="option">{{ option }}</option>
+                    </select>
                     <!-- Error message -->
-                    <div *ngIf="startDate?.invalid && (startDate?.dirty || startDate?.touched || isSubmitted)" class="error">
-                        <div *ngIf="startDate?.hasError('required')">
-                            Start date is required.
+                    <div *ngIf="client?.invalid && (client?.touched || isSubmitted)" class="error">
+                        <div *ngIf="client?.hasError('required')">
+                            Client is required.
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="label-field">
+                <label class="col-sm-1 col-form-label required"><strong>Dates</strong></label>
+                <div>
+                    <!-- Datepicker popup -->
+                    <div class="dp-hidden position-absolute">
+                        <div class="input-group">
+                            <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
+                                [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2"
+                                [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1" />
+                            <ng-template #t let-date let-focused="focused">
+                                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                                    [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                                    (mouseleave)="hoveredDate = null">
+                                    {{ date.day }}
+                                </span>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column" style="gap: 0.5rem;">
+                        <!-- From date -->
+                        <div class="input-group">
+                            <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate"
+                                (input)="validateInput($event, 'FROM')" formControlName="fromDate" required />
+                            <button class="btn btn-outline-secondary d-flex align-items-center" (click)="datepicker.toggle()" type="button">
+                                <ng-icon name="bootstrapCalendar3" class="icon"></ng-icon></button>
+                        </div>
+                        <!-- Error message -->
+                        <div *ngIf="startDate?.invalid && (startDate?.dirty || startDate?.touched || isSubmitted)" class="error">
+                            <div *ngIf="startDate?.hasError('required')">
+                                Start date is required.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex flex-column" style="gap: 0.5rem;">
+                        <!-- To date -->
+                        <div class="input-group">
+                            <input #dpToDate class="form-control" placeholder="yyyy-mm-dd" name="dpToDate"
+                                (input)="validateInput($event, 'TO')" formControlName="toDate" required />
+                            <button class="btn btn-outline-secondary d-flex align-items-center" (click)="datepicker.toggle()" type="button">
+                                <ng-icon name="bootstrapCalendar3" class="icon"></ng-icon></button>
+                        </div>
+                        <!-- Error message -->
+                        <div *ngIf="endDate?.invalid && (endDate?.dirty || endDate?.touched || isSubmitted)" class="error">
+                            <div *ngIf="endDate?.hasError('required')">
+                                End date is required.
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div>
-                <div class="d-flex flex-column" style="gap: 0.5rem;">
-                    <!-- To date -->
-                    <div class="input-group">
-                        <input #dpToDate class="form-control" placeholder="yyyy-mm-dd" name="dpToDate"
-                            (input)="validateInput($event, 'TO')" formControlName="toDate" required />
-                        <button class="btn btn-outline-secondary d-flex align-items-center" (click)="datepicker.toggle()" type="button">
-                            <ng-icon name="bootstrapCalendar3" class="icon"></ng-icon></button>
-                    </div>
-                    <!-- Error message -->
-                    <div *ngIf="endDate?.invalid && (endDate?.dirty || endDate?.touched || isSubmitted)" class="error">
-                        <div *ngIf="endDate?.hasError('required')">
-                            End date is required.
-                        </div>
-                    </div>
+            <button class="btn_primary field">Generate Report</button>
+        </form>
+
+        <hr />
+
+        <!-- Reports history table -->
+        <!-- <h5 style="margin: 1.5rem 0.75rem;">Reports History</h5>
+        <form>
+            <div class="mb-3 row">
+                <label for="table-search-name" class="col-sm-1 col-form-label"><strong>Search Name</strong></label>
+                <div class="col-xs-3 col-sm-auto">
+                    <input id="table-search-name" type="text" class="form-control" name="searchTerm"
+                        [(ngModel)]="service.searchTerm" />
                 </div>
             </div>
-        </div>
-        <button class="btn_primary field">Generate Report</button>
-    </form>
-
-    <hr />
-
-    <!-- Reports history table -->
-    <!-- <h5 style="margin: 1.5rem 0.75rem;">Reports History</h5>
-    <form>
-        <div class="mb-3 row">
-            <label for="table-search-name" class="col-sm-1 col-form-label"><strong>Search Name</strong></label>
-            <div class="col-xs-3 col-sm-auto">
-                <input id="table-search-name" type="text" class="form-control" name="searchTerm"
-                    [(ngModel)]="service.searchTerm" />
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col" sortable="client" (sort)="onSort($event)">Name</th>
+                        <th scope="col" sortable="startDate" (sort)="onSort($event)">Start Date</th>
+                        <th scope="col" sortable="endDate" (sort)="onSort($event)">End Date</th>
+                        <th scope="col">File</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="isLoading || (service.loading$ | async)" >
+                    <tr>
+                        <td colspan="5" class="text-center">
+                            <div class="spinner-border" style="width: 1.5rem; height: 1.5rem; color: darkgray;" role="status"></div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody *ngIf="!isLoading && !(service.loading$ | async)" >
+                    @for (report of reports$ | async; track report.id) {
+                    <tr>
+                        <th scope="row">{{ report.id }}</th>
+                        <td><ngb-highlight [result]="report.client" [term]="service.searchTerm" /></td>
+                        <td>{{ report.startDate | date: 'dd MMM yyyy' }}</td>
+                        <td>{{ report.endDate | date: 'dd MMM yyyy' }}</td>
+                        <td>
+                            <a href="{{ report.url }}" target="_blank">
+                                <ng-icon name="bootstrapFileEarmarkPdf" class="icon"></ng-icon>
+                            </a>
+                        </td>
+                    </tr>
+                    } @empty {
+                    <tr>
+                        <td colspan="5" style="text-align: center">No reports found.</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-center p-2">
+                <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize">
+                </ngb-pagination>
             </div>
-        </div>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col" sortable="client" (sort)="onSort($event)">Name</th>
-                    <th scope="col" sortable="startDate" (sort)="onSort($event)">Start Date</th>
-                    <th scope="col" sortable="endDate" (sort)="onSort($event)">End Date</th>
-                    <th scope="col">File</th>
-                </tr>
-            </thead>
-            <tbody *ngIf="isLoading || (service.loading$ | async)" >
-                <tr>
-                    <td colspan="5" class="text-center">
-                        <div class="spinner-border" style="width: 1.5rem; height: 1.5rem; color: darkgray;" role="status"></div>
-                    </td>
-                </tr>
-            </tbody>
-            <tbody *ngIf="!isLoading && !(service.loading$ | async)" >
-                @for (report of reports$ | async; track report.id) {
-                <tr>
-                    <th scope="row">{{ report.id }}</th>
-                    <td><ngb-highlight [result]="report.client" [term]="service.searchTerm" /></td>
-                    <td>{{ report.startDate | date: 'dd MMM yyyy' }}</td>
-                    <td>{{ report.endDate | date: 'dd MMM yyyy' }}</td>
-                    <td>
-                        <a href="{{ report.url }}" target="_blank">
-                            <ng-icon name="bootstrapFileEarmarkPdf" class="icon"></ng-icon>
-                        </a>
-                    </td>
-                </tr>
-                } @empty {
-                <tr>
-                    <td colspan="5" style="text-align: center">No reports found.</td>
-                </tr>
-                }
-            </tbody>
-        </table>
-        <div class="d-flex justify-content-center p-2">
-            <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize">
-            </ngb-pagination>
-        </div>
-    </form>
+        </form>
 
-    <hr /> -->
+        <hr /> -->
 
-    <!-- Hidden Report PDF template -->
-    <h5 style="margin: 1.5rem 0.75rem;">Report Preview</h5>
-    <div id="table-container">
-        <p-table #dt [value]="tableData" [paginator]="true" [rows]="10" dataKey="newField" [tableStyle]="">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th style="min-width: 6rem;"></th>
-                    <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
-                    <th>CAMPAIGN NAME</th>
-                    <th style="border-right: 1px solid #c8c8c8; border-right-width: 2px;"></th>
-                    <th>STATUS</th>
-                    <th>START DATE</th>
-                    <th>END DATE</th>
-                    <th>BUDGET DELIVERED</th>
-                    <th>IMPRESSIONS</th>
-                    <th>VIEWS</th>
-                    <th>REACH</th>
-                    <th>CLICKS</th>
-                </tr>
-            </ng-template>
-            <ng-template #body let-campaign>
-                <tr>
-                    <td>
-                        <p-button type="button" pRipple [pRowToggler]="campaign" [text]="true" [rounded]="true"
-                            [plain]="true" [icon]="'pi pi-chevron-down'" />
-                        <p-tableCheckbox [value]="campaign" class="campaignCheckbox" />
-                    </td>
-                    <td>{{ campaign.campaignId }}</td>
-                    <td>{{ campaign.newField }} - {{campaign.campaignSubText}} <br>
-                        {{ campaign.campaignSubText}} | {{ campaign.client}}
-                    </td>
-                    <td style="border-right: 1px solid #c8c8c8; border-right-width: 2px;"></td>
-                    <td class="text-center">
-                        <div [class]="getBadgeClass(campaign.status)">
-                            {{ campaign.status }}
-                        </div>
-                    </td>
-                    <td>
-                        <div class="d-flex justify-content-center">
-                            <p class="m-0">{{ campaign.earliestStartDate | date: 'dd MMM yyyy' }} <br> 00:00</p>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="d-flex justify-content-center">
-                            <p class="m-0">{{ campaign.latestEndDate | date: 'dd MMM yyyy' }} <br> 23:59</p>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="d-flex justify-content-center">
-                        <div class="d-flex flex-column">
-                            {{ campaign.sumSpent | number:'1.2-2' }} MYR
-                            <progress [value]="campaign.progressValue" max="100" style="background-color: #00bfff; background: #00bfff; color: #00bfff; height: 5px; gap: 3px;"></progress>
-                            {{ campaign.sumBudget | number:'1.2-2' }} MYR
-                        </div>
-                        </div>
-                    </td>
-                    <td class="text-end">{{ campaign.sumImpressions | number }}</td>
-                    <td class="text-end">{{ campaign.sumView | number }}</td>
-                    <td class="text-end">{{ campaign.sumReach | number }}</td>
-                    <td class="text-end">{{ campaign.sumClicks | number }}</td>
-                </tr>
-                <tr *ngFor="let sub of campaign.subCampaign">
-                    <td></td>
-                    <td><i class="pi pi-chevron-right"></i><p-tableCheckbox class="subCampaignCheckbox" /></td>
-                    <td>
-                        {{ sub.subCampaign }} / {{sub.subCampaignSubText}} <br>
-                        Order
-                    </td>
-                    <td style="border-right: 1px solid #c8c8c8; border-right-width: 2px;">
-                        <i class="pi pi-ellipsis-v"></i>
-                    </td>
-                    <td class="text-center">
-                        <div [class]="getBadgeClass(sub.status, campaign.status)">
-                            {{ (!sub.status || sub.status.length === 0) ? campaign.status : sub.status }}
-                        </div>
-                    </td>
-                    <td class="text-center">{{ sub.startDate | date: 'dd MMM yyyy' }}</td>
-                    <td class="text-center">{{ sub.endDate | date: 'dd MMM yyyy' }}</td>
-                    <td style="padding-left: 2.5rem;">{{ sub.budget | number:'1.2-2' }} MYR</td>
-                    <td class="text-end">{{ sub.impressions | number }}</td>
-                    <td class="text-end">{{ sub.views | number }}</td>
-                    <td class="text-end">{{ sub.reach | number:'1.2-2' }}</td>
-                    <td class="text-end">{{ sub.clicks | number }}</td>
-                </tr>
-            </ng-template>
-        </p-table>
+        <!-- Hidden Report PDF template -->
+        <h5 style="margin: 1.5rem 0.75rem;">Report Preview</h5>
+        <div id="table-container">
+            <p-table #dt [value]="tableData" [paginator]="true" [rows]="10" dataKey="newField" [tableStyle]="">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width: 6rem;"></th>
+                        <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
+                        <th>CAMPAIGN NAME</th>
+                        <th style="border-right: 1px solid #c8c8c8; border-right-width: 2px;"></th>
+                        <th>STATUS</th>
+                        <th>START DATE</th>
+                        <th>END DATE</th>
+                        <th>BUDGET DELIVERED</th>
+                        <th>IMPRESSIONS</th>
+                        <th>VIEWS</th>
+                        <th>REACH</th>
+                        <th>CLICKS</th>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-campaign>
+                    <tr>
+                        <td>
+                            <p-button type="button" pRipple [pRowToggler]="campaign" [text]="true" [rounded]="true"
+                                [plain]="true" [icon]="'pi pi-chevron-down'" />
+                            <p-tableCheckbox [value]="campaign" class="campaignCheckbox" />
+                        </td>
+                        <td>{{ campaign.campaignId }}</td>
+                        <td>{{ campaign.newField }} - {{campaign.campaignSubText}} <br>
+                            {{ campaign.campaignSubText}} | {{ campaign.client}}
+                        </td>
+                        <td style="border-right: 1px solid #c8c8c8; border-right-width: 2px;"></td>
+                        <td class="text-center">
+                            <div [class]="getBadgeClass(campaign.status)">
+                                {{ campaign.status }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <p class="m-0">{{ campaign.earliestStartDate | date: 'dd MMM yyyy' }} <br> 00:00</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <p class="m-0">{{ campaign.latestEndDate | date: 'dd MMM yyyy' }} <br> 23:59</p>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center">
+                            <div class="d-flex flex-column">
+                                {{ campaign.sumSpent | number:'1.2-2' }} MYR
+                                <progress [value]="campaign.progressValue" max="100" style="background-color: #00bfff; background: #00bfff; color: #00bfff; height: 5px; gap: 3px;"></progress>
+                                {{ campaign.sumBudget | number:'1.2-2' }} MYR
+                            </div>
+                            </div>
+                        </td>
+                        <td class="text-end">{{ campaign.sumImpressions | number }}</td>
+                        <td class="text-end">{{ campaign.sumView | number }}</td>
+                        <td class="text-end">{{ campaign.sumReach | number }}</td>
+                        <td class="text-end">{{ campaign.sumClicks | number }}</td>
+                    </tr>
+                    <tr *ngFor="let sub of campaign.subCampaign">
+                        <td></td>
+                        <td><i class="pi pi-chevron-right"></i><p-tableCheckbox class="subCampaignCheckbox" /></td>
+                        <td>
+                            {{ sub.subCampaign }} / {{sub.subCampaignSubText}} <br>
+                            Order
+                        </td>
+                        <td style="border-right: 1px solid #c8c8c8; border-right-width: 2px;">
+                            <i class="pi pi-ellipsis-v"></i>
+                        </td>
+                        <td class="text-center">
+                            <div [class]="getBadgeClass(sub.status, campaign.status)">
+                                {{ (!sub.status || sub.status.length === 0) ? campaign.status : sub.status }}
+                            </div>
+                        </td>
+                        <td class="text-center">{{ sub.startDate | date: 'dd MMM yyyy' }}</td>
+                        <td class="text-center">{{ sub.endDate | date: 'dd MMM yyyy' }}</td>
+                        <td style="padding-left: 2.5rem;">{{ sub.budget | number:'1.2-2' }} MYR</td>
+                        <td class="text-end">{{ sub.impressions | number }}</td>
+                        <td class="text-end">{{ sub.views | number }}</td>
+                        <td class="text-end">{{ sub.reach | number:'1.2-2' }}</td>
+                        <td class="text-end">{{ sub.clicks | number }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
     </div>
-</div>
+}

@@ -1,4 +1,6 @@
+<app-success-fail-toast aria-live="polite" aria-atomic="true"></app-success-fail-toast>
 <div style="padding: 2rem;">
+    <ng-template #failedTpl> Failed to upload file. </ng-template>
     <div class="campaign-outline">
         <div class="row title">
             <div class="col-8">
@@ -13,9 +15,8 @@
                 <p-dropdown [options]="statusOptions" placeholder="Status" [(ngModel)]="selectedStatus" (onChange)="filterTable()"></p-dropdown>
                 <p-dropdown [options]="campaignObjective" placeholder="Campaign Objective" [(ngModel)]="selectedObjective" (onChange)="filterTable()"></p-dropdown>
             </div>
-            <div class="d-flex gap-2 datepickerrange">
+            <!-- <div class="d-flex gap-2 datepickerrange">
                 <div>
-                    <!-- Datepicker popup -->
                     <div class="dp-hidden position-absolute">
                         <div class="input-group">
                             <input name="datepicker" ngbDatepicker #datepicker="ngbDatepicker"
@@ -30,7 +31,6 @@
                             </ng-template>
                         </div>
                     </div>
-                    <!-- From date -->
                     <div class="input-group">
                         <input #dpFromDate placeholder="yyyy-mm-dd" (input)="validateInput($event, 'FROM')" [(ngModel)]="fromDateStr" class="date-field" />
                         <button class="btn btn-outline-secondary d-flex align-items-center" (click)="datepicker.toggle()" type="button">
@@ -38,7 +38,6 @@
                     </div>
                 </div>
                 <div>
-                    <!-- To date -->
                     <div class="input-group">
                         <input #dpToDate placeholder="yyyy-mm-dd" (input)="validateInput($event, 'TO')" [(ngModel)]="toDateStr" class="date-field" />
                         <button class="btn btn-outline-secondary d-flex align-items-center" (click)="datepicker.toggle()" type="button">
@@ -49,7 +48,7 @@
                     <button class="btn_primary search-button" (click)="filterByDate()"><ng-icon name="bootstrapSearch" class="icon"></ng-icon></button>
                     <button class="icon-btn-secondary" (click)="clearFilter()"><ng-icon name="bootstrapXLg" class="icon"></ng-icon></button>
                 </div>
-            </div>
+            </div> -->
             <div class="col" class="searchInput col">
                 <p-iconfield>
                     <p-inputicon styleClass="pi pi-search" />

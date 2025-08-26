@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AppModule } from '../../../app.module';
 import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
@@ -11,23 +11,25 @@ import { TagModule } from 'primeng/tag';
 import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
 import { Router, RouterModule } from '@angular/router';
-import { CampaignsService } from '../../../services';
+import { CampaignsService, SuccessFailToastService } from '../../../services';
 import { Menu } from 'primeng/menu';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { bootstrapCalendar3, bootstrapSearch, bootstrapXLg } from '@ng-icons/bootstrap-icons';
+import { SuccessFailToastComponent } from '../../shared';
 
 @Component({
   selector: 'app-campaigns',
   imports: [AppModule, TableModule, DropdownModule, InputIconModule, IconFieldModule, FormsModule, InputTextModule, ButtonModule,
-    TagModule, MenuModule, RouterModule, Menu, NgbDatepickerModule, NgIcon, IconFieldModule],
-  providers: [provideIcons({ bootstrapCalendar3, bootstrapSearch, bootstrapXLg })],
+    TagModule, MenuModule, RouterModule, Menu, NgbDatepickerModule, NgIcon, IconFieldModule, SuccessFailToastComponent],
+  providers: [provideIcons({ bootstrapCalendar3, bootstrapSearch, bootstrapXLg }), SuccessFailToastService],
   templateUrl: './campaigns.component.html',
   styleUrl: './campaigns.component.less'
 })
 export class CampaignsComponent implements OnInit {
   calendar = inject(NgbCalendar);
   formatter = inject(NgbDateParserFormatter);
+  toastService = inject(SuccessFailToastService);
 
   constructor(
     private router: Router,
@@ -58,6 +60,9 @@ export class CampaignsComponent implements OnInit {
     { label: 'Traffic', value: 'Traffic' }
   ];
   data: any[] = [];
+
+  
+  @ViewChild('failedTpl') failedTpl!: TemplateRef<any>;
 
   ngOnInit(): void {
     this.loadData();
@@ -139,7 +144,7 @@ export class CampaignsComponent implements OnInit {
         this.loadData();
       },
       error => {
-        alert(error?.message);
+        this.toastService.show({ template: this.failedTpl, classname: 'bg-danger text-light', header: 'Fail' });
       }
     );
   }

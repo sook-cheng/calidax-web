@@ -4,7 +4,7 @@ import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDatepickerModule, NgbH
 import { AppModule } from '../../app.module';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { bootstrapCalendar3, bootstrapFileEarmarkPdf } from '@ng-icons/bootstrap-icons';
-import { ReportService, SuccessFailToastService } from '../../services';
+import { ReportService, SuccessFailToastService, UserService } from '../../services';
 import { Observable } from 'rxjs';
 import { Report } from '../../interfaces';
 import { NgbdSortableHeader, SortEvent } from '../../directives';
@@ -18,12 +18,13 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
+import { AccessDeniedPageComponent } from '../access-denied-page/access-denied-page.component';
 
 @Component({
   selector: 'app-reports',
   imports: [AppModule, NgbDatepickerModule, ReactiveFormsModule, NgIcon, NgbHighlight, NgbdSortableHeader, NgbPaginationModule, SuccessFailToastComponent,
-    TagModule, TableModule, ButtonModule, InputIconModule, IconFieldModule],
-  providers: [provideIcons({ bootstrapCalendar3, bootstrapFileEarmarkPdf }), ReportService, SuccessFailToastService, HttpClient],
+    TagModule, TableModule, ButtonModule, InputIconModule, IconFieldModule, AccessDeniedPageComponent],
+  providers: [provideIcons({ bootstrapCalendar3, bootstrapFileEarmarkPdf }), ReportService, SuccessFailToastService, HttpClient, UserService],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.less'
 })
@@ -31,6 +32,7 @@ export class ReportsComponent implements OnInit {
   calendar = inject(NgbCalendar);
   formatter = inject(NgbDateParserFormatter);
   toastService = inject(SuccessFailToastService);
+  userService = inject(UserService);
 
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null = this.calendar.getToday();
@@ -40,6 +42,7 @@ export class ReportsComponent implements OnInit {
   failMsgVisible = false;
   isLoading = true;
   isSubmitted = false;
+  isAdmin = false;
   tableData: any[] = [];
 
   dateFilterForm: FormGroup = new FormGroup({
@@ -63,6 +66,15 @@ export class ReportsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const userId = localStorage.getItem('id');
+    this.userService.getUserById(userId!).subscribe({
+      next: (data) => {
+        this.isAdmin = data?.isAdmin;
+      },
+      error: (err) => {
+        console.error('Error fetching user:', err);
+      }
+    });
     setTimeout(() => {
       this.isLoading = false;
     }, 1000);

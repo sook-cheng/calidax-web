@@ -1,6 +1,7 @@
 // Public Pages
 export * from './auth/auth.component';
 export * from './page-not-found/page-not-found.component';
+export * from './access-denied-page/access-denied-page.component';
 
 // Protected Pages
 export * from './reports/reports.component';

@@ -1,25 +1,35 @@
-<div style="padding: 2rem;">
-    <div class="row">
-        <div class="col-5">
-            <h4>Upload a file from you computer</h4>
-            <div>
-                <input type="file" id="fileInput" (change)="onFileSelected($event)" #fileInput>
+<app-success-fail-toast aria-live="polite" aria-atomic="true"></app-success-fail-toast>
+@if(!isAdmin) 
+{
+    <app-access-denied-page></app-access-denied-page>
+}
+@else {
+    <div style="padding: 2rem;">
+        <ng-template #successTpl> File uploaded successfully. </ng-template>
+        <ng-template #failedTpl> Failed to upload file. </ng-template>
+        <ng-template #invalidFileTpl> Invalid CSV file. </ng-template>
+        <div class="row">
+            <div class="col-5">
+                <h4>Upload a file from you computer</h4>
+                <div>
+                    <input type="file" id="fileInput" (change)="onFileSelected($event)" #fileInput>
+                </div>
+                <div>
+                    <button class="btn-upload" (click)="uploadCSV()" [disabled]="!selectedFile"><i class="fa-solid fa-up-long"></i>Upload selected file</button>
+                    <span *ngIf="selectedFile"> or</span>
+                    <span class="cancel-text" *ngIf="selectedFile" (click)="clearFile(fileInput)">Cancel</span>
+                </div>
+                <div class="uploadFile-span">
+                    <span>The file will be uploaded to https://dashboard.calidaxtech.com/documents/csv</span>
+                </div>
             </div>
-            <div>
-                <button class="btn-upload" (click)="uploadCSV()" [disabled]="!selectedFile"><i class="fa-solid fa-up-long"></i>Upload selected file</button>
-                <span *ngIf="selectedFile"> or</span>
-                <span class="cancel-text" *ngIf="selectedFile" (click)="clearFile(fileInput)">Cancel</span>
+            <div class="col" style="padding-top: 0.5rem;">
+                <span>OR</span>
             </div>
-            <div class="uploadFile-span">
-                <span>The file will be uploaded to https://dashboard.calidaxtech.com/documents/csv</span>
+            <div class="col-5">
+                <h4>Browse the server</h4>
+                <button class="btn-upload"><i class="fa-solid fa-link"></i>Browse the server</button>
             </div>
-        </div>
-        <div class="col" style="padding-top: 0.5rem;">
-            <span>OR</span>
-        </div>
-        <div class="col-5">
-            <h4>Browse the server</h4>
-            <button class="btn-upload"><i class="fa-solid fa-link"></i>Browse the server</button>
         </div>
     </div>
-</div>
+}

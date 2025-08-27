@@ -12,7 +12,6 @@ interface CSVUploadResponse {
 @Component({
     selector: 'app-data-management',
     imports: [AppModule, SuccessFailToastComponent, AccessDeniedPageComponent],
-    providers: [SuccessFailToastService, UserService],
     templateUrl: './data-management.component.html',
     styleUrl: './data-management.component.less'
 })

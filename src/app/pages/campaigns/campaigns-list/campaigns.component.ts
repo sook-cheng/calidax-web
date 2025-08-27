@@ -11,7 +11,7 @@ import { TagModule } from 'primeng/tag';
 import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
 import { Router, RouterModule } from '@angular/router';
-import { CampaignsService, SuccessFailToastService } from '../../../services';
+import { CampaignsService, SuccessFailToastService, UserService } from '../../../services';
 import { Menu } from 'primeng/menu';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgIcon, provideIcons } from '@ng-icons/core';
@@ -22,18 +22,19 @@ import { SuccessFailToastComponent } from '../../shared';
   selector: 'app-campaigns',
   imports: [AppModule, TableModule, DropdownModule, InputIconModule, IconFieldModule, FormsModule, InputTextModule, ButtonModule,
     TagModule, MenuModule, RouterModule, Menu, NgbDatepickerModule, NgIcon, IconFieldModule, SuccessFailToastComponent],
-  providers: [provideIcons({ bootstrapCalendar3, bootstrapSearch, bootstrapXLg }), SuccessFailToastService],
+  providers: [provideIcons({ bootstrapCalendar3, bootstrapSearch, bootstrapXLg })],
   templateUrl: './campaigns.component.html',
   styleUrl: './campaigns.component.less'
 })
 export class CampaignsComponent implements OnInit {
   calendar = inject(NgbCalendar);
   formatter = inject(NgbDateParserFormatter);
-  toastService = inject(SuccessFailToastService);
 
   constructor(
     private router: Router,
     private service: CampaignsService,
+    private toastService: SuccessFailToastService,
+    private userService: UserService
   ) { }
 
   hoveredDate: NgbDate | null = null;
@@ -60,11 +61,21 @@ export class CampaignsComponent implements OnInit {
     { label: 'Traffic', value: 'Traffic' }
   ];
   data: any[] = [];
-
+  expandedRows = {};
+  isAdmin: boolean = false;
   
   @ViewChild('failedTpl') failedTpl!: TemplateRef<any>;
 
   ngOnInit(): void {
+    const userId = localStorage.getItem('id');
+    this.userService.getUserById(userId!).subscribe({
+      next: (data) => {
+        this.isAdmin = data?.isAdmin;
+      },
+      error: (err) => {
+        console.error('Error fetching user:', err);
+      }
+    });
     this.loadData();
   }
 
@@ -73,6 +84,7 @@ export class CampaignsComponent implements OnInit {
       this.data = response.records;
       this.filteredData = [...this.data]; // Default display
       this.filteredData = response.records.flat();
+      this.expandedRows = this.filteredData.reduce((acc, p) => (acc[p.newField] = true) && acc, {});
       this.updateMenuItemsForAll();
     });
   }

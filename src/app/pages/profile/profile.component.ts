@@ -8,7 +8,6 @@ import { SuccessFailToastComponent } from '../shared';
 @Component({
     selector: 'app-profile',
     imports: [AppModule, DialogModule, SuccessFailToastComponent],
-    providers: [SuccessFailToastService],
     templateUrl: './profile.component.html',
     styleUrl: './profile.component.less'
 })
@@ -22,8 +21,8 @@ export class ProfileComponent implements OnInit{
   @ViewChild('failedTpl') failedTpl!: TemplateRef<any>;
 
   constructor(
-    private userService: UserService,
     private router: Router,
+    private userService: UserService,
     private toastService: SuccessFailToastService
   ) {}
 

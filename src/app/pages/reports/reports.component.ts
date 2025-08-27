@@ -24,15 +24,13 @@ import { AccessDeniedPageComponent } from '../access-denied-page/access-denied-p
   selector: 'app-reports',
   imports: [AppModule, NgbDatepickerModule, ReactiveFormsModule, NgIcon, NgbHighlight, NgbdSortableHeader, NgbPaginationModule, SuccessFailToastComponent,
     TagModule, TableModule, ButtonModule, InputIconModule, IconFieldModule, AccessDeniedPageComponent],
-  providers: [provideIcons({ bootstrapCalendar3, bootstrapFileEarmarkPdf }), ReportService, SuccessFailToastService, HttpClient, UserService],
+  providers: [provideIcons({ bootstrapCalendar3, bootstrapFileEarmarkPdf })],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.less'
 })
 export class ReportsComponent implements OnInit {
   calendar = inject(NgbCalendar);
   formatter = inject(NgbDateParserFormatter);
-  toastService = inject(SuccessFailToastService);
-  userService = inject(UserService);
 
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null = this.calendar.getToday();
@@ -60,7 +58,12 @@ export class ReportsComponent implements OnInit {
   @ViewChild('failedTpl') failedTpl!: TemplateRef<any>;
   @ViewChild('noRecordTpl') noRecordTpl!: TemplateRef<any>;
 
-  constructor(public service: ReportService, private http: HttpClient) {
+  constructor(
+    public service: ReportService, 
+    private http: HttpClient,
+    private toastService: SuccessFailToastService,
+    private userService: UserService
+  ) {
     this.reports$ = service.reports$;
     this.total$ = service.total$;
   }

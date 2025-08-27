@@ -9,7 +9,7 @@ import { AccessDeniedPageComponent } from '../access-denied-page/access-denied-p
 @Component({
   selector: 'app-events-manager',
   imports: [AppModule, NgIcon, AccessDeniedPageComponent],
-  providers: [provideIcons({ bootstrapCheckCircleFill }), UserService],
+  providers: [provideIcons({ bootstrapCheckCircleFill })],
   templateUrl: './events-manager.component.html',
   styleUrl: './events-manager.component.less'
 })

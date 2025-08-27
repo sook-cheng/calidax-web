@@ -14,6 +14,6 @@ export default `<!doctype html>
 </script>
   <app-root></app-root>
   <app-redirect></app-redirect>
-<link rel="modulepreload" href="chunk-CND4UFJK.js"><link rel="modulepreload" href="chunk-FK6H3RFT.js"><link rel="modulepreload" href="chunk-EQDQRRRY.js"><script src="polyfills-EQXJKH7W.js" type="module"></script><script src="scripts-SODCSRAA.js" defer=""></script><script src="main-Q4JJLMPJ.js" type="module"></script></body>
+<link rel="modulepreload" href="chunk-4IWTWBAE.js"><link rel="modulepreload" href="chunk-FK6H3RFT.js"><link rel="modulepreload" href="chunk-EQDQRRRY.js"><script src="polyfills-EQXJKH7W.js" type="module"></script><script src="scripts-SODCSRAA.js" defer=""></script><script src="main-MWIZVKMP.js" type="module"></script></body>
 </html>
 `;
